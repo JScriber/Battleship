@@ -10,44 +10,34 @@ namespace BattleShip.Models
     public class Player
     {
         #region Attributs
-        private List<Ship> ships;
-        private List<Cell> successShot;
-        private List<Cell> failShot;
+        private Map map;
+        private bool isHuman;
         #endregion
 
         #region Properties
-        public List<Ship> Ships
-        {
-            get { return ships; }
-            set { ships = value; }
-        }
 
-        public List<Cell> SuccessShot
+        public Map Map
         {
-            get { return successShot; }
-            set { successShot = value; }
+            get { return map; }
+            set { map = value; }
         }
-
-        public List<Cell> FailShot
+        
+        public bool IsHuman
         {
-            get { return failShot; }
-            set { failShot = value; }
+            get { return isHuman; }
+            set { isHuman = value; }
         }
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
         public Player()
         {
-            this.successShot = new List<Cell>();
-            this.failShot = new List<Cell>();
         }
 
-        public Player(List<Ship> ships)
+        public Player(bool isHuman, Map map)
         {
-            this.ships = ships;
+            this.isHuman = isHuman;
+            this.map = map;
         }
         #endregion
     }

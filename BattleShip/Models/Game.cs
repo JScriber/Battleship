@@ -8,7 +8,6 @@ namespace BattleShip.Models
 {
     class Game
     {
-
         #region StaticVariables
         #endregion
 
@@ -19,21 +18,28 @@ namespace BattleShip.Models
         #endregion
 
         #region Attributs
-        private DateTime startAt;
-        private DateTime endAt;
+        private Player human;
+        private Player computer;
+        private List<Shot> shots;
         #endregion
 
         #region Properties
-        public DateTime StartAt
+        public Player Human
         {
-            get { return startAt; }
-            set { startAt = value; }
+            get { return human; }
+            set { human = value; }
         }
 
-        public DateTime EndAt
+        public Player Computer
         {
-            get { return endAt; }
-            set { endAt = value; }
+            get { return computer; }
+            set { computer = value; }
+        }
+
+        public List<Shot> Shots
+        {
+            get { return shots; }
+            set { shots = value; }
         }
         #endregion
 
@@ -44,6 +50,12 @@ namespace BattleShip.Models
         public Game()
         {
 
+        }
+
+        public Game(Player human, Player computer)
+        {
+            this.human = human;
+            this.computer = computer;
         }
         #endregion
 

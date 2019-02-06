@@ -11,6 +11,7 @@ namespace BattleShip.Models.Utils
         #region Attributs
         private int x;
         private int y;
+        private bool isDestroyed;
         #endregion
 
         #region Properties
@@ -25,6 +26,13 @@ namespace BattleShip.Models.Utils
             get { return y; }
             set { y = value; }
         }
+
+        public bool IsDestroyed
+        {
+            get { return isDestroyed; }
+            set { isDestroyed = value; }
+        }
+
         #endregion
 
         #region Constructors
