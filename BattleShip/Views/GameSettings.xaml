@@ -1,11 +1,11 @@
-﻿<Window x:Class="BattleShip.MainWindow"
+﻿<Window x:Class="BattleShip.Views.GameSettings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BattleShip"
+        xmlns:local="clr-namespace:BattleShip.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="GameSettings" Height="500" Width="850">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -33,24 +33,6 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-
-        <ListView x:Name="shipSelector" Margin="0"
-            Grid.Column="0"
-            Grid.Row="0"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical"></StackPanel>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="class1Data" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="{Binding Data}" VerticalAlignment="Center" Padding="10,0,0,0"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
     </Grid>
+
 </Window>

@@ -46,23 +46,23 @@ namespace BattleShip.Controllers
         /// </summary>
         /// <param name="coordinates"></param>
         /// <param name="map"></param>
-        public void Hit(Coordinates<int> coordinates, Map map, Player player)
-        {
-            if (this.CanHit(coordinates, player))
-            {
-                Ship ship = this.FindShip(map, coordinates);
+        //public void Hit(Coordinates<int> coordinates, Map map, Player player)
+        //{
+        //    if (this.CanHit(coordinates, player))
+        //    {
+        //        Ship ship = this.FindShip(map, coordinates);
 
-                if (ship == null)
-                {
-                    player.FailShot.Add(coordinates);
-                }
-                else
-                {
-                    player.SuccessShot.Add(coordinates);
-                    this.HitShip(ship);
-                }
-            }
-        }
+        //        if (ship == null)
+        //        {
+        //            player.FailShot.Add(coordinates);
+        //        }
+        //        else
+        //        {
+        //            player.SuccessShot.Add(coordinates);
+        //            this.HitShip(ship);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Says if the player can hit at the given coordinates.
@@ -80,13 +80,13 @@ namespace BattleShip.Controllers
         /// Hits the given ship.
         /// </summary>
         /// <param name="ship"></param>
-        private void HitShip(Ship ship)
-        {
-            if (!ship.HasSunk())
-            {
-                ship.Hits++;
-            }
-        }
+        //private void HitShip(Ship ship)
+        //{
+        //    if (!ship.HasSunk())
+        //    {
+        //        ship.Hits++;
+        //    }
+        //}
 
         /// <summary>
         /// Finds the ship in the map.
@@ -94,16 +94,16 @@ namespace BattleShip.Controllers
         /// <param name="map"></param>
         /// <param name="coordinates"></param>
         /// <returns></returns>
-        private Ship FindShip(Map map, Coordinates<int> coordinates)
-        {
-            if (this.CoordinatesInMap(coordinates, map))
-            {
-                return map.Representation[coordinates.X, coordinates.Y];
-            } else
-            {
-                throw new OutOfBoundException();
-            }
-        }
+        //private Ship FindShip(Map map, Coordinates<int> coordinates)
+        //{
+        //    if (this.CoordinatesInMap(coordinates, map))
+        //    {
+        //        return map.Representation[coordinates.X, coordinates.Y];
+        //    } else
+        //    {
+        //        throw new OutOfBoundException();
+        //    }
+        //}
 
         /// <summary>
         /// Says if the coordinates are in the map.

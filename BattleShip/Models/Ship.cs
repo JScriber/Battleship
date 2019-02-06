@@ -16,8 +16,7 @@ namespace BattleShip.Models
     {
         #region Attributs
         private ShipType type;
-        private int width;
-        private int height;
+        private Dimensions dimensions;
         private List<Coordinates<int>> coordinates;
         #endregion
 
@@ -28,23 +27,18 @@ namespace BattleShip.Models
             set { type = value; }
         }
         
-        public int Width
-        {
-            get { return width; }
-            set { width = value; }
-        }
-
-        public int Height
-        {
-            get { return height; }
-            set { height = value; }
-        }
-
         public List<Coordinates<int>> Coordinates
         {
             get { return coordinates; }
             set { coordinates = value; }
         }
+
+        public Dimensions Dimensions
+        {
+            get { return dimensions; }
+            set { dimensions = value; }
+        }
+
 
         #endregion
 
@@ -56,14 +50,16 @@ namespace BattleShip.Models
         {
         }
 
-        public Ship(ShipType type, int width, int height, List<Coordinates<int>> coordinates)
+        public Ship(ShipType type, Dimensions dimensions)
         {
             this.type = type;
-            this.width = width;
-            this.height = height;
-            this.coordinates = coordinates;
+            this.dimensions = dimensions;
         }
 
+        public Ship(ShipType type, Dimensions dimensions, List<Coordinates<int>> coordinates): this(type, dimensions)
+        {
+            this.coordinates = coordinates;
+        }
         #endregion
     }
 }

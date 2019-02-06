@@ -28,7 +28,7 @@ namespace BattleShip.Models.Utils
         #endregion
 
         #region Constructors
-        public Coordinates(int x, int y)
+        public Coordinates(T x, T y)
         {
             this.x = x;
             this.y = y;
