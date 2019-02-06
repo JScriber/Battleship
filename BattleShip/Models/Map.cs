@@ -11,15 +11,15 @@ namespace BattleShip.Models
     public class Map
     {
         #region Attributs
-        private Dimensions dimensions;
+        private Dimension dimension;
         private List<Ship> ships;
         #endregion
 
         #region Properties
-        public Dimensions Dimensions
+        public Dimension Dimension
         {
-            get { return dimensions; }
-            set { dimensions = value; }
+            get { return dimension; }
+            set { dimension = value; }
         }
 
         public List<Ship> Ships
@@ -36,9 +36,9 @@ namespace BattleShip.Models
             this.ships = new List<Ship>();
         }
 
-        public Map(Dimensions dimensions): this()
+        public Map(Dimension dimension): this()
         {
-            this.dimensions = dimensions;
+            this.dimension = dimension;
         }
         #endregion
     }

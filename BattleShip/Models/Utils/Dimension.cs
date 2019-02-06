@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BattleShip.Models.Utils
 {
-    public class Dimensions
+    public class Dimension
     {
         #region Attributs
         private int width;
@@ -31,12 +31,12 @@ namespace BattleShip.Models.Utils
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public Dimensions()
+        public Dimension()
         {
 
         }
 
-        public Dimensions(int width, int height)
+        public Dimension(int width, int height)
         {
             this.width = width;
             this.height = height;

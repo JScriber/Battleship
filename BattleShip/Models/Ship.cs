@@ -18,7 +18,7 @@ namespace BattleShip.Models
         private ShipType type;
         private int width;
         private int height;
-        private List<Coordinates<int>> coordinates;
+        private List<Cell> coordinates;
         #endregion
 
         #region Properties
@@ -40,7 +40,7 @@ namespace BattleShip.Models
             set { height = value; }
         }
 
-        public List<Coordinates<int>> Coordinates
+        public List<Cell> Coordinates
         {
             get { return coordinates; }
             set { coordinates = value; }
@@ -56,7 +56,7 @@ namespace BattleShip.Models
         {
         }
 
-        public Ship(ShipType type, int width, int height, List<Coordinates<int>> coordinates)
+        public Ship(ShipType type, int width, int height, List<Cell> coordinates)
         {
             this.type = type;
             this.width = width;
