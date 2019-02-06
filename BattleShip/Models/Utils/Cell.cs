@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace BattleShip.Models.Utils
 {
-    public class Coordinates<T>
+    public class Cell
     {
         #region Attributs
-        private T x;
-        private T y;
+        private int x;
+        private int y;
         #endregion
 
         #region Properties
-        public T X
+        public int X
         {
             get { return x; }
             set { x = value; }
         }
 
-        public T Y
+        public int Y
         {
             get { return y; }
             set { y = value; }
@@ -28,7 +28,7 @@ namespace BattleShip.Models.Utils
         #endregion
 
         #region Constructors
-        public Coordinates(T x, T y)
+        public Cell(int x, int y)
         {
             this.x = x;
             this.y = y;

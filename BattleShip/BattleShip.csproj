@@ -35,7 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,6 +75,7 @@
     </Compile>
     <Compile Include="Controllers\GameHandler.cs" />
     <Compile Include="Controllers\MapHandler.cs" />
+    <Compile Include="Database\ApplicationDbContext.cs" />
     <Compile Include="Exceptions\OutOfBoundException.cs" />
     <Compile Include="Exceptions\OverlapException.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -83,8 +91,9 @@
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Ship.cs" />
-    <Compile Include="Models\Utils\Coordinates.cs" />
-    <Compile Include="Models\Utils\Dimensions.cs" />
+    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\Utils\Cell.cs" />
+    <Compile Include="Models\Utils\Dimension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -102,6 +111,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

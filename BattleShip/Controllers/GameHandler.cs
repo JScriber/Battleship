@@ -24,9 +24,6 @@ namespace BattleShip.Controllers
         #region Attributs
         #endregion
 
-        #region Properties
-        #endregion
-
         #region Constructors
         /// <summary>
         /// Default constructor.
@@ -46,7 +43,7 @@ namespace BattleShip.Controllers
         /// </summary>
         /// <param name="coordinates"></param>
         /// <param name="map"></param>
-        //public void Hit(Coordinates<int> coordinates, Map map, Player player)
+        //public void Hit(Cell coordinates, Map map, Player player)
         //{
         //    if (this.CanHit(coordinates, player))
         //    {
@@ -70,11 +67,11 @@ namespace BattleShip.Controllers
         /// <param name="coordinates"></param>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool CanHit(Coordinates<int> coordinates, Player player)
-        {
-            return !player.SuccessShot.Contains(coordinates) &&
-                !player.FailShot.Contains(coordinates);
-        }
+        //public bool CanHit(Cell coordinates, Player player)
+        //{
+        //    return !player.SuccessShot.Contains(coordinates) &&
+        //        !player.FailShot.Contains(coordinates);
+        //}
 
         /// <summary>
         /// Hits the given ship.
@@ -94,7 +91,7 @@ namespace BattleShip.Controllers
         /// <param name="map"></param>
         /// <param name="coordinates"></param>
         /// <returns></returns>
-        //private Ship FindShip(Map map, Coordinates<int> coordinates)
+        //private Ship FindShip(Map map, Cell coordinates)
         //{
         //    if (this.CoordinatesInMap(coordinates, map))
         //    {
@@ -111,19 +108,17 @@ namespace BattleShip.Controllers
         /// <param name="coordinates"></param>
         /// <param name="map"></param>
         /// <returns></returns>
-        private bool CoordinatesInMap(Coordinates<int> coordinates, Map map)
-        {
-            Dimensions dimensions = map.Dimensions;
+        //private bool CoordinatesInMap(Cell coordinates, Map map)
+        //{
+        //    Dimension dimensions = map.Dimension;
 
-            return coordinates.X >= 0 && coordinates.Y >= 0
-                && coordinates.X < dimensions.Width
-                && coordinates.Y < dimensions.Height;
-        }
+        //    return coordinates.X >= 0 && coordinates.Y >= 0
+        //        && coordinates.X < dimensions.Width
+        //        && coordinates.Y < dimensions.Height;
+        //}
         #endregion
 
         #region Events
         #endregion
-
-
     }
 }

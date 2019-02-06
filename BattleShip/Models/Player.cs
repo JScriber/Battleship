@@ -11,8 +11,8 @@ namespace BattleShip.Models
     {
         #region Attributs
         private List<Ship> ships;
-        private List<Coordinates<int>> successShot;
-        private List<Coordinates<int>> failShot;
+        private List<Cell> successShot;
+        private List<Cell> failShot;
         #endregion
 
         #region Properties
@@ -22,13 +22,13 @@ namespace BattleShip.Models
             set { ships = value; }
         }
 
-        public List<Coordinates<int>> SuccessShot
+        public List<Cell> SuccessShot
         {
             get { return successShot; }
             set { successShot = value; }
         }
 
-        public List<Coordinates<int>> FailShot
+        public List<Cell> FailShot
         {
             get { return failShot; }
             set { failShot = value; }
@@ -41,8 +41,8 @@ namespace BattleShip.Models
         /// </summary>
         public Player()
         {
-            this.successShot = new List<Coordinates<int>>();
-            this.failShot = new List<Coordinates<int>>();
+            this.successShot = new List<Cell>();
+            this.failShot = new List<Cell>();
         }
 
         public Player(List<Ship> ships)

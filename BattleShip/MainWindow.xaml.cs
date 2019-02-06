@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
 using BattleShip.Models;
 using BattleShip.Models.Utils;
 
@@ -24,14 +23,42 @@ namespace BattleShip
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Ship> ShipType { get; set; }
+        #region StaticVariables
+        #endregion
 
+        #region Constants
+        #endregion
+
+        #region Variables
+        ObservableCollection<Game> games = new ObservableCollection<Game>();
+        ObservableCollection<Ship> ships = new ObservableCollection<Ship>();
+        ObservableCollection<Player> players = new ObservableCollection<Player>();
+        ObservableCollection<Map> map = new ObservableCollection<Map>();
+        ObservableCollection<Cell> coordinates = new ObservableCollection<Cell>();
+        ObservableCollection<Dimension> dimensions = new ObservableCollection<Dimension>();
+
+        #endregion
+
+        #region Attributs
+        #endregion
+
+        #region Properties
+        public ObservableCollection<Ship> ShipType { get; set; }
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public MainWindow()
         {
+            this.ShipType = new ObservableCollection<Ship>();
+
             // Default configurations.
             this.AddDefaultTypes();
 
             InitializeComponent();
+
         }
 
         /// <summary>
@@ -56,10 +83,20 @@ namespace BattleShip
         /// <param name="height"></param>
         private void AddShip(ShipType type, int width, int height)
         {
-            Dimensions dimensions = new Dimensions(width, height);
-            Ship ship = new Ship(type, dimensions);
+            Dimension dimension = new Dimension(width, height);
+            Ship ship = new Ship(type, dimension);
 
             this.ShipType.Add(ship);
         }
+        #endregion
+
+        #region StaticFunctions
+        #endregion
+
+        #region Functions
+        #endregion
+
+        #region Events
+        #endregion
     }
 }
