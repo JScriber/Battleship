@@ -36,6 +36,11 @@ namespace BattleShip.Models.Utils
         #endregion
 
         #region Constructors
+        public Cell()
+        {
+
+        }
+
         public Cell(int x, int y)
         {
             this.x = x;

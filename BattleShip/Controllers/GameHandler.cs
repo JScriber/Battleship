@@ -38,84 +38,97 @@ namespace BattleShip.Controllers
         #endregion
 
         #region Functions
-        /// <summary>
-        /// Hits in the map.
-        /// </summary>
-        /// <param name="coordinates"></param>
-        /// <param name="map"></param>
-        //public void Hit(Cell coordinates, Map map, Player player)
-        //{
-        //    if (this.CanHit(coordinates, player))
-        //    {
-        //        Ship ship = this.FindShip(map, coordinates);
 
-        //        if (ship == null)
-        //        {
-        //            player.FailShot.Add(coordinates);
-        //        }
-        //        else
-        //        {
-        //            player.SuccessShot.Add(coordinates);
-        //            this.HitShip(ship);
-        //        }
-        //    }
-        //}
+        public void Hit(Cell cell, Map map, Player player, Game game)
+        {
+            if (this.CanShot(cell, map, game))
+            {
+                Ship ship = this.FindShip(map, cell);
+                bool success = ship != null;
+
+                if (success)
+                {
+                    this.HitShip(ship, cell);
+                }
+
+                // Logs the shot.
+                // TODO: persist shots by passing by the db.
+                Shot shot = new Shot(success, player, cell, map);
+                game.Shots.Add(shot);
+            }
+        }
 
         /// <summary>
         /// Says if the player can hit at the given coordinates.
         /// </summary>
-        /// <param name="coordinates"></param>
-        /// <param name="player"></param>
+        /// <param name="cell"></param>
+        /// <param name="map"></param>
+        /// <param name="game"></param>
         /// <returns></returns>
-        //public bool CanHit(Cell coordinates, Player player)
-        //{
-        //    return !player.SuccessShot.Contains(coordinates) &&
-        //        !player.FailShot.Contains(coordinates);
-        //}
+        public bool CanShot(Cell cell, Map map, Game game)
+        {
+            // Test if a shot hasn't been done in the same map before.
+            return game.Shots.First(shot => shot.Map == map && shot.Cell == cell) == null;
+        }
 
         /// <summary>
         /// Hits the given ship.
         /// </summary>
         /// <param name="ship"></param>
-        //private void HitShip(Ship ship)
-        //{
-        //    if (!ship.HasSunk())
-        //    {
-        //        ship.Hits++;
-        //    }
-        //}
+        /// <param name="target"></param>
+        private void HitShip(Ship ship, Cell target)
+        {
+            if (!this.HasSunk(ship))
+            {
+                int x = target.X;
+                int y = target.Y;
+
+                Cell cell = ship.Cells.Find(c => c.X == x && c.Y == y);
+
+                if (cell != null)
+                {
+                    cell.IsDestroyed = true;
+                }
+            }
+        }
+
+        private bool HasSunk(Ship ship)
+        {
+            return ship.Cells.All(cell => cell.IsDestroyed);
+        }
 
         /// <summary>
         /// Finds the ship in the map.
         /// </summary>
         /// <param name="map"></param>
-        /// <param name="coordinates"></param>
+        /// <param name="cell"></param>
         /// <returns></returns>
-        //private Ship FindShip(Map map, Cell coordinates)
-        //{
-        //    if (this.CoordinatesInMap(coordinates, map))
-        //    {
-        //        return map.Representation[coordinates.X, coordinates.Y];
-        //    } else
-        //    {
-        //        throw new OutOfBoundException();
-        //    }
-        //}
+        private Ship FindShip(Map map, Cell cell)
+        {
+            if (this.CellInMap(cell, map))
+            {
+                return map.Ships.First(ship => ship.Cells.Any(c => c.X == cell.X && c.Y == cell.Y));
+            }
+            else
+            {
+                throw new OutOfBoundException();
+            }
+        }
 
         /// <summary>
-        /// Says if the coordinates are in the map.
+        /// Says if the cell is in the map.
         /// </summary>
-        /// <param name="coordinates"></param>
+        /// <param name="cell"></param>
         /// <param name="map"></param>
         /// <returns></returns>
-        //private bool CoordinatesInMap(Cell coordinates, Map map)
-        //{
-        //    Dimension dimensions = map.Dimension;
+        private bool CellInMap(Cell cell, Map map)
+        {
+            Dimension dimensions = map.Dimension;
 
-        //    return coordinates.X >= 0 && coordinates.Y >= 0
-        //        && coordinates.X < dimensions.Width
-        //        && coordinates.Y < dimensions.Height;
-        //}
+            return cell.X >= 0 && cell.Y >= 0
+                && cell.X < dimensions.Width
+                && cell.Y < dimensions.Height;
+        }
         #endregion
 
         #region Events

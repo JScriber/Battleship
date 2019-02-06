@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BattleShip.Models
 {
-    class Game
+    public class Game
     {
         #region StaticVariables
         #endregion

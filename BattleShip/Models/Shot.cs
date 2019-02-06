@@ -63,10 +63,10 @@ namespace BattleShip.Models
 
         }
 
-        public Shot(Player player, bool isSuccessful, Cell cell, Map map)
+        public Shot(bool isSuccessful, Player player, Cell cell, Map map)
         {
-            this.player = player;
             this.isSuccessful = isSuccessful;
+            this.player = player;
             this.cell = cell;
             this.map = map;
         }
