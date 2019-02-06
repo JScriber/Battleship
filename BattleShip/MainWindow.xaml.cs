@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BattleShip.Models;
 using BattleShip.Models.Utils;
+using BattleShip.Database;
+using BattleShip.Controllers;
 
 namespace BattleShip
 {
@@ -59,6 +61,41 @@ namespace BattleShip
 
             InitializeComponent();
 
+            this.Test();
+        }
+
+        private void Test()
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                // Base configuration.
+                Ship carrier = new Ship(Models.ShipType.Carrier, new Dimension(2, 1));
+                Ship cruiser = new Ship(Models.ShipType.Cruiser, new Dimension(3, 1));
+                Ship submarine = new Ship(Models.ShipType.Submarine, new Dimension(3, 1));
+                Ship destroyer = new Ship(Models.ShipType.Destroyer, new Dimension(3, 1));
+                Ship battleShip = new Ship(Models.ShipType.BattleShip, new Dimension(4, 1));
+
+                Dimension dimension = new Dimension(10, 10);
+
+                // Builders.
+                var sb = new ShipBuilder(dimension);
+
+
+                // Create human map.
+                Map humanMap = new Map(dimension);
+                humanMap.Ships = new List<Ship>()
+                {
+                    sb.FromModel(carrier, 1, 1, false),
+                    sb.FromModel(destroyer, 5, 6, true)
+                };
+
+                Player human = new Player(true, humanMap);
+
+                Game game = new Game(human, null);
+
+                db.DbGame.Add(game);
+                db.SaveChanges();
+            }
         }
 
         /// <summary>

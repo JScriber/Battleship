@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BattleShip.Database
 {
-    class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
 
         #region StaticVariables
@@ -27,6 +27,7 @@ namespace BattleShip.Database
         private DbSet<Ship> dbShip;
         private DbSet<Dimension> dbDimension;
         private DbSet<Cell> dbCoordinates;
+        private DbSet<Shot> dbShots;
         #endregion
 
         #region Properties
@@ -59,6 +60,13 @@ namespace BattleShip.Database
             get { return dbCoordinates; }
             set { dbCoordinates = value; }
         }
+
+        public DbSet<Shot> DbShots
+        {
+            get { return dbShots; }
+            set { dbShots = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -67,7 +75,7 @@ namespace BattleShip.Database
         /// </summary>
         public ApplicationDbContext()
         {
-            DevResetDatabase();
+            this.DevResetDatabase();
         }
         #endregion
 

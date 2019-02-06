@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace BattleShip.Models.Utils
         #endregion
 
         #region Properties
+        [Key]
+        public int id { set; get; }
+
         public int Width
         {
             get { return width; }
@@ -40,6 +44,11 @@ namespace BattleShip.Models.Utils
         {
             this.width = width;
             this.height = height;
+        }
+
+        public Dimension(Dimension dimension): this(dimension.Width, dimension.Height)
+        {
+            
         }
         #endregion
     }

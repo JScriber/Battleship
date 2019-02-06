@@ -62,6 +62,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\ShipBuilder.cs" />
+    <Compile Include="Models\Shot.cs" />
     <Compile Include="Views\GameSettings.xaml.cs">
       <DependentUpon>GameSettings.xaml</DependentUpon>
     </Compile>

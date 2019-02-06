@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,9 @@ namespace BattleShip.Models
         #endregion
 
         #region Properties
+        [Key]
+        public int id { set; get; }
+
         public Player Player
         {
             get { return player; }

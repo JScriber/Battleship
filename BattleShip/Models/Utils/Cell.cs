@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ namespace BattleShip.Models.Utils
         #endregion
 
         #region Properties
+        [Key]
+        public int id { set; get; }
+
         public int X
         {
             get { return x; }
@@ -43,8 +47,9 @@ namespace BattleShip.Models.Utils
 
         public Cell(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
+            this.IsDestroyed = false;
         }
         #endregion 
     }
