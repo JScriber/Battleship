@@ -67,6 +67,9 @@ namespace BattleShip.Views
             {
                 mapHeight = value;
                 ResizeMap(this.gameGridPlayer1);
+
+                // TODO: Remove.
+                //this.StartPlaying();
             }
         }
         #endregion
@@ -168,6 +171,11 @@ namespace BattleShip.Views
             Ship ship = new Ship(type, dimension);
 
             this.ShipType.Add(ship);
+        }
+
+        private void StartPlaying()
+        {
+            (this.Parent as Window).Content = new Play();
         }
         #endregion
 
