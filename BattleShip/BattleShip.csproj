@@ -64,10 +64,10 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\ShipBuilder.cs" />
     <Compile Include="Models\Shot.cs" />
-    <Compile Include="Views\GameSettings.xaml.cs">
-      <DependentUpon>GameSettings.xaml</DependentUpon>
+    <Compile Include="Views\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -80,11 +80,11 @@
     <Compile Include="Database\ApplicationDbContext.cs" />
     <Compile Include="Exceptions\OutOfBoundException.cs" />
     <Compile Include="Exceptions\OverlapException.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\GameSettings.xaml">
+    <Page Include="Views\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

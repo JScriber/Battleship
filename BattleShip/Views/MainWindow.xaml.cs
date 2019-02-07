@@ -18,7 +18,7 @@ using BattleShip.Models.Utils;
 using BattleShip.Database;
 using BattleShip.Controllers;
 
-namespace BattleShip
+namespace BattleShip.Views
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -60,6 +60,7 @@ namespace BattleShip
             this.AddDefaultTypes();
 
             InitializeComponent();
+            this.Content = new Settings();
 
             this.Test();
         }
@@ -135,5 +136,10 @@ namespace BattleShip
 
         #region Events
         #endregion
+
+        private void ShipSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
