@@ -60,8 +60,9 @@ namespace BattleShip.Views
             this.AddDefaultTypes();
             
             InitializeComponent();
+            //this.Content = new Settings();
             this.Content = new Settings();
-            
+
             this.Test();
 
             InitializeComponent();

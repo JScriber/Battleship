@@ -15,12 +15,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
+using BattleShip.Models;
+using BattleShip.Models.Utils;
+
 namespace BattleShip.Views
 {
     /// <summary>
-    /// Logique d'interaction pour Settings.xaml
+    /// Logique d'interaction pour Play.xaml
     /// </summary>
-    public partial class Settings : Page
+    public partial class Play : Page
     {
 
         #region StaticVariables
@@ -33,43 +36,23 @@ namespace BattleShip.Views
         #endregion
 
         #region Attributs
-        private int mapWidth;
-        private int mapHeight;
         #endregion
 
         #region Properties
-        public int MapWidth
-        {
-            get { return mapWidth; }
-            set
-            {
-                mapWidth = value;
-                ResizeMap();
-            }
-        }
-
-        public int MapHeight
-        {
-            get { return mapHeight; }
-            set
-            {
-                mapHeight = value;
-                ResizeMap();
-            }
-        }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public Settings()
+        public Play()
         {
             InitializeComponent();
             this.DataContext = this;
 
-            // TODO: Remove.
-            (this.Parent as Window).Content = new Play();
+            Map map = new Map(new Dimension(10, 10));
+
+            this.BuildMap(map);
         }
         #endregion
 
@@ -77,38 +60,46 @@ namespace BattleShip.Views
         #endregion
 
         #region Functions
-        private void ResizeMap()
+        private void BuildMap(Map map)
         {
-            this.gameGridPlayer1.Children.Clear();
-            this.gameGridPlayer1.ColumnDefinitions.Clear();
-            this.gameGridPlayer1.RowDefinitions.Clear();
+            // Clears the attributes that will change.
+            this.mapPlayer.Children.Clear();
+            this.mapPlayer.ColumnDefinitions.Clear();
+            this.mapPlayer.RowDefinitions.Clear();
 
-            for (int i = 0; i < this.MapHeight; i++)
+            // Get the dimensions.
+            Dimension dimension = map.Dimension;
+            int i;
+
+            for (i = 0; i < dimension.Width; i++)
             {
-                ColumnDefinition col = new ColumnDefinition();
-                this.gameGridPlayer1.ColumnDefinitions.Add(col);
+                ColumnDefinition column = new ColumnDefinition();
+                this.mapPlayer.ColumnDefinitions.Add(column);
             }
 
-            for (int i = 0; i < this.MapWidth; i++)
+            for (i = 0; i < dimension.Height; i++)
             {
                 RowDefinition row = new RowDefinition();
-                this.gameGridPlayer1.RowDefinitions.Add(row);
+                this.mapPlayer.RowDefinitions.Add(row);
             }
 
+            // Button rendering.
             Task.Factory.StartNew(() =>
             {
-                for (int i = 0; i < this.MapHeight; i++)
+                for (i = 0; i < dimension.Height; i++)
                 {
-                    for (int j = 0; j < this.MapWidth; j++)
+                    for (int j = 0; j < dimension.Width; j++)
                     {
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
+                            //  TODO: get boat in map.
+
                             Button btn = new Button();
                             btn.Content = "H:" + i + "W:" + j;
                             Grid.SetColumn(btn, i);
                             Grid.SetRow(btn, j);
 
-                            this.gameGridPlayer1.Children.Add(btn);
+                            this.mapPlayer.Children.Add(btn);
                         }));
                     }
                 }
@@ -118,6 +109,5 @@ namespace BattleShip.Views
 
         #region Events
         #endregion
-
     }
 }
