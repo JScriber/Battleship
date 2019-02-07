@@ -44,6 +44,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,12 +68,19 @@
     <Compile Include="Controllers\ShipBuilder.cs" />
     <Compile Include="Models\ShipConfiguration.cs" />
     <Compile Include="Models\Shot.cs" />
+    <Compile Include="UserControls\ShotControl.xaml.cs">
+      <DependentUpon>ShotControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Play.xaml.cs">
       <DependentUpon>Play.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\ShotControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Play.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -131,6 +140,16 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\fail_shot.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\sea.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\success_shot.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

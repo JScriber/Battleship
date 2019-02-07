@@ -84,7 +84,21 @@ namespace BattleShip.Controllers
         {
             List<Ship> ships = new List<Ship>();
 
-            // TODO: Implement.
+            foreach (var configuration in shipConfigurations)
+            {
+                int multiplicity = configuration.Multiplicity;
+                Dimension dimension = configuration.Dimension;
+                Random random = new Random();
+
+                for (int i = 0; i < multiplicity; i++)
+                {
+                    int x = random.Next(0, this.Bounds.Width - dimension.Width);
+                    int y = random.Next(0, this.Bounds.Height - dimension.Height);
+                    
+                    Ship ship = this.FromConfiguration(configuration, x, y, false);
+                    ships.Add(ship);
+                }
+            }
 
             return ships;
         }

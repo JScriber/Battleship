@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using BattleShip.Models;
 using BattleShip.Models.Utils;
 using BattleShip.Controllers;
+using BattleShip.UserControls;
 
 namespace BattleShip.Views
 {
@@ -140,36 +141,33 @@ namespace BattleShip.Views
             {
                 List<Shot> playerShots = this.game.Shots.Where(shot => shot.Player.IsHuman).ToList();
 
+                foreach (var s in playerShots)
+                {
+                    System.Console.WriteLine(s.IsSuccessful);
+                }
+
                 for (int i = 0; i < map.Dimension.Height; i++)
                 {
                     for (int j = 0; j < map.Dimension.Width; j++)
                     {
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
-                            Button button = new Button();
                             Shot shot = playerShots.FirstOrDefault(s => s.Cell.X == i && s.Cell.Y == j);
+                            ShotState state = ShotState.None;
 
                             if (shot != null)
                             {
-                                if (shot.IsSuccessful)
-                                {
-                                    button.Background = this.SHOT_SUCCESS;
-                                } else
-                                {
-                                    button.Background = this.SHOT_FAILED;
-                                }
-                            } else
-                            {
-                                button.Background = this.NO_SHOT;
+                                state = shot.IsSuccessful
+                                    ? ShotState.Success
+                                    : ShotState.Fail;
                             }
 
-                            // Button logic.
-                            button.Click += this.Hit_Map;
+                            ShotControl shotControl = new ShotControl(i, j, state);
 
-                            Grid.SetColumn(button, i);
-                            Grid.SetRow(button, j);
+                            Grid.SetColumn(shotControl, i);
+                            Grid.SetRow(shotControl, j);
 
-                            this.mapShots.Children.Add(button);
+                            this.mapShots.Children.Add(shotControl);
                         }));
                     }
                 }
@@ -224,10 +222,9 @@ namespace BattleShip.Views
         #endregion
 
         #region Events
-        private void Hit_Map(object sender, RoutedEventArgs e)
+        public void HitMap(int x, int y)
         {
-            // TODO: Replace by user control.
-            Cell cell = new Cell(0, 0);
+            Cell cell = new Cell(x, y);
             Map foo = this.game.Computer.Map;
 
             // Hits the cell.

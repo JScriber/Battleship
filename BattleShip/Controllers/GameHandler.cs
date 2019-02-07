@@ -64,7 +64,6 @@ namespace BattleShip.Controllers
                 }
 
                 // Logs the shot.
-                // TODO: persist shots by passing by the db.
                 Shot shot = new Shot(success, player, cell, map);
 
                 this.SaveShot(game, shot);
@@ -167,14 +166,11 @@ namespace BattleShip.Controllers
         private void SaveShot(Game game, Shot shot)
         {
             game.Shots.Add(shot);
+            
+            // Add a shot to the list of shots.
+            this.DbContext.DbGame.Where(g => g.id == game.id).First().Shots.Add(shot);
 
-            using (var dbcontext = this.DbContext)
-            {
-                // Add a shot to the list of shots.
-                dbcontext.DbGame.Where(g => g.id == game.id).First().Shots.Add(shot);
-
-                dbcontext.SaveChanges();
-            }
+            this.DbContext.SaveChanges();
         }
         #endregion
 
