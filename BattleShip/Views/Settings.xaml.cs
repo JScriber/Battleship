@@ -72,6 +72,7 @@ namespace BattleShip.Views
         {
             this.ShipType = new ObservableCollection<Ship>();
             InitializeComponent();
+            BindListviews();
             this.DataContext = this;
         }
         #endregion
@@ -155,12 +156,18 @@ namespace BattleShip.Views
             });
         }
 
+        private void BindListviews()
+        {
+            this.shipListAdded.ItemsSource = ships;
+        }
+
         private void AddShip(ShipType type, int width, int height)
         {
             Dimension dimension = new Dimension(width, height);
             Ship ship = new Ship(type, dimension);
 
-            this.ShipType.Add(ship);
+            ships.Add(ship);
+            Console.WriteLine("type:" + ship.Type + " dimensions:" + ship.Dimension);
         }
 
         private void StartPlaying()
@@ -174,15 +181,32 @@ namespace BattleShip.Views
         {
             StartPlaying();
         }
-        private void BtnAddShip(object sender, RoutedEventArgs e)
+
+        private void BtnAddShipType1(object sender, RoutedEventArgs e)
         {
-            //AddShip(ship);
+            AddShip(Models.ShipType.Destroyer, int.Parse(this.shipType1Size.Text), 1);
         }
-        #endregion
+        private void BtnAddShipType2(object sender, RoutedEventArgs e)
+        {
+            AddShip(Models.ShipType.Cruiser, int.Parse(this.shipType2Size.Text), 1);
+        }
+        private void BtnAddShipType3(object sender, RoutedEventArgs e)
+        {
+            AddShip(Models.ShipType.Submarine, int.Parse(this.shipType3Size.Text), 1);
+        }
+        private void BtnAddShipType4(object sender, RoutedEventArgs e)
+        {
+            AddShip(Models.ShipType.BattleShip, int.Parse(this.shipType4Size.Text), 1);
+        }
+        private void BtnAddShipType5(object sender, RoutedEventArgs e)
+        {
+            AddShip(Models.ShipType.Carrier, int.Parse(this.shipType5Size.Text), 1);
+        }
 
         private void MapWidthTxt_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
+        #endregion
     }
 }

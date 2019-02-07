@@ -43,7 +43,7 @@
 
             <TextBlock x:Name="mapWidthLabel" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">Map Width</TextBlock>
             <TextBlock x:Name="mapHeightLabel" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">Map Height</TextBlock>
-            <TextBox x:Name="mapWidthTxt" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MapWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="MapWidthTxt_TextChanged"></TextBox>
+            <TextBox x:Name="shipType1SizemapWidthTxt" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MapWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="MapWidthTxt_TextChanged"></TextBox>
             <TextBox x:Name="mapHeightTxt" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Text="{Binding MapHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </Grid>
 
@@ -117,23 +117,23 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <TextBlock x:Name="shipSize1" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">2</TextBlock>
-                <TextBlock x:Name="shipSize2" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right">3</TextBlock>
-                <TextBlock x:Name="shipSize3" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right">3</TextBlock>
-                <TextBlock x:Name="shipSize4" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right">4</TextBlock>
-                <TextBlock x:Name="shipSize5" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right">5</TextBlock>
+                <TextBlock x:Name="shipType1Size" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">2</TextBlock>
+                <TextBlock x:Name="shipType2Size" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right">3</TextBlock>
+                <TextBlock x:Name="shipType3Size" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right">3</TextBlock>
+                <TextBlock x:Name="shipType4Size" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right">4</TextBlock>
+                <TextBlock x:Name="shipType5Size" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right">5</TextBlock>
                 
-                <TextBlock x:Name="shipLabel1" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">Destroy</TextBlock>
-                <TextBlock x:Name="shipLabel2" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">Cruiser</TextBlock>
-                <TextBlock x:Name="shipLabel3" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">Submarine</TextBlock>
-                <TextBlock x:Name="shipLabel4" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">BattleShip</TextBlock>
-                <TextBlock x:Name="shipLabel5" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">Carrier</TextBlock>
+                <TextBlock x:Name="shipType1Label" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">Destroy</TextBlock>
+                <TextBlock x:Name="shipType2Label" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">Cruiser</TextBlock>
+                <TextBlock x:Name="shipType3Label" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">Submarine</TextBlock>
+                <TextBlock x:Name="shipType4Label" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">BattleShip</TextBlock>
+                <TextBlock x:Name="shipType5Label" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">Carrier</TextBlock>
 
-                <Button x:Name="btnAddShip1" Grid.Column="2" Grid.Row="0">+</Button>
-                <Button x:Name="btnAddShip2" Grid.Column="2" Grid.Row="1">+</Button>
-                <Button x:Name="btnAddShip3" Grid.Column="2" Grid.Row="2">+</Button>
-                <Button x:Name="btnAddShip4" Grid.Column="2" Grid.Row="3">+</Button>
-                <Button x:Name="btnAddShip5" Grid.Column="2" Grid.Row="4">+</Button>
+                <Button x:Name="btnAddShipType1" Grid.Column="2" Grid.Row="0" Click="BtnAddShipType1">+</Button>
+                <Button x:Name="btnAddShipType2" Grid.Column="2" Grid.Row="1" Click="BtnAddShipType2">+</Button>
+                <Button x:Name="btnAddShipType3" Grid.Column="2" Grid.Row="2" Click="BtnAddShipType3">+</Button>
+                <Button x:Name="btnAddShipType4" Grid.Column="2" Grid.Row="3" Click="BtnAddShipType4">+</Button>
+                <Button x:Name="btnAddShipType5" Grid.Column="2" Grid.Row="4" Click="BtnAddShipType5">+</Button>
             </Grid>
 
             <ListView x:Name="shipListAdded" Grid.Column="4"
@@ -147,7 +147,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Name="class1Data" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="{Binding Data}" VerticalAlignment="Center" Padding="10,0,0,0"/>
+                            <TextBlock x:Name="class1Data" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="{Binding Type}" VerticalAlignment="Center" Padding="10,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -164,11 +164,10 @@
 
             <TextBlock x:Name="messageBox" Text="{Binding Data}" VerticalAlignment="Center"></TextBlock>
             <Button x:Name="btnStartGame" Grid.Column="1" Grid.Row="2" Click="BtnStartGame">Start game</Button>
-        
         </Grid>
 
+        
         <Grid x:Name="gameGridLeft" Grid.Row="3" Grid.Column="1"></Grid>
         <Grid x:Name="gameGridRight" Grid.Row="3" Grid.Column="3"></Grid>
-        
     </Grid>
 </Page>
