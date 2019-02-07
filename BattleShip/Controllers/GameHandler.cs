@@ -80,8 +80,12 @@ namespace BattleShip.Controllers
         /// <returns></returns>
         public bool CanShot(Cell cell, Map map, Game game)
         {
+            List<Shot> shots = game.Shots;
+
             // Test if a shot hasn't been done in the same map before.
-            return game.Shots.First(shot => shot.Map == map && shot.Cell == cell) == null;
+            Shot shot = shots.Find(s => s.Map.id == map.id && this.CellsAreEqual(s.Cell, cell));
+            
+            return shot == null;
         }
 
         /// <summary>
@@ -120,7 +124,7 @@ namespace BattleShip.Controllers
         {
             if (this.CellInMap(cell, map))
             {
-                return map.Ships.First(ship => ship.Cells.Any(c => c.X == cell.X && c.Y == cell.Y));
+                return map.Ships.FirstOrDefault(ship => ship.Cells.Any(c => this.CellsAreEqual(c, cell)));
             }
             else
             {
@@ -141,6 +145,18 @@ namespace BattleShip.Controllers
             return cell.X >= 0 && cell.Y >= 0
                 && cell.X < dimensions.Width
                 && cell.Y < dimensions.Height;
+        }
+
+        /// <summary>
+        /// Says if two cells are equal.
+        /// </summary>
+        /// <param name="compared"></param>
+        /// <param name="comparing"></param>
+        /// <returns></returns>
+        private bool CellsAreEqual(Cell compared, Cell comparing)
+        {
+            return compared.X == comparing.X &&
+                compared.Y == comparing.Y;
         }
 
         /// <summary>

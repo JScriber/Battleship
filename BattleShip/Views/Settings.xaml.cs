@@ -89,9 +89,9 @@ namespace BattleShip.Views
         #endregion
 
         #region Functions
-        private void Test()
+        private Game GenGame()
         {
-            Dimension dimension = new Dimension(10, 10);
+            Dimension dimension = new Dimension(5, 5);
 
             // Builders.
             var gb = new GameBuilder();
@@ -118,12 +118,7 @@ namespace BattleShip.Views
             // Random placement for IA.
             List<Ship> robotShips = sb.RandomFromConfigurations(configurations);
 
-            Game game = gb.CreateGame(configurations, ships, robotShips, dimension);
-
-            foreach (var ship in game.Human.Map.Ships)
-            {
-                System.Console.WriteLine(ship.Type);
-            }
+            return gb.CreateGame(configurations, ships, robotShips, dimension);
         }
 
         private void ResizeMap(Grid gridName)
@@ -166,7 +161,8 @@ namespace BattleShip.Views
 
         private void StartPlaying()
         {
-            (this.Parent as Window).Content = new Play();
+            Game game = this.GenGame();
+            (this.Parent as Window).Content = new Play(game);
         }
         #endregion
 

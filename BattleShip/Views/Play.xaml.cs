@@ -17,6 +17,7 @@ using System.Windows.Threading;
 
 using BattleShip.Models;
 using BattleShip.Models.Utils;
+using BattleShip.Controllers;
 
 namespace BattleShip.Views
 {
@@ -25,17 +26,24 @@ namespace BattleShip.Views
     /// </summary>
     public partial class Play : Page
     {
-
         #region StaticVariables
         #endregion
 
         #region Constants
+        private readonly SolidColorBrush SHOT_SUCCESS = Brushes.Green;
+        private readonly SolidColorBrush SHOT_FAILED = Brushes.Red;
+        private readonly SolidColorBrush NO_SHOT = Brushes.Gray;
+
+        private readonly SolidColorBrush SHIP = Brushes.Blue;
+        private readonly SolidColorBrush NO_SHIP = Brushes.Gray;
         #endregion
 
         #region Variables
         #endregion
 
         #region Attributs
+        private Game game;
+        private GameHandler gameHandler;
         #endregion
 
         #region Properties
@@ -45,14 +53,18 @@ namespace BattleShip.Views
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public Play()
+        public Play(Game game)
         {
+            this.game = game;
+            this.gameHandler = new GameHandler();
+
             InitializeComponent();
+
+            // Data binding with view.
             this.DataContext = this;
 
-            Map map = new Map(new Dimension(10, 10));
-
-            this.BuildMap(map);
+            this.BuildMap();
+            this.BuildShots();
         }
         #endregion
 
@@ -60,35 +72,37 @@ namespace BattleShip.Views
         #endregion
 
         #region Functions
-        private void BuildMap(Map map)
+        /// <summary>
+        /// Builds the map.
+        /// </summary>
+        private void BuildMap()
         {
-            // Clears the attributes that will change.
-            this.mapPlayer.Children.Clear();
-            this.mapPlayer.ColumnDefinitions.Clear();
-            this.mapPlayer.RowDefinitions.Clear();
-
-            // Get the dimensions.
+            // Map of the current player.
+            Map map = this.game.Human.Map;
             Dimension dimension = map.Dimension;
-            int i;
 
-            for (i = 0; i < dimension.Width; i++)
-            {
-                ColumnDefinition column = new ColumnDefinition();
-                this.mapPlayer.ColumnDefinitions.Add(column);
-            }
+            // Initialize the map.
+            this.SetGridDimension(this.mapPlayer, dimension);
 
-            for (i = 0; i < dimension.Height; i++)
-            {
-                RowDefinition row = new RowDefinition();
-                this.mapPlayer.RowDefinitions.Add(row);
-            }
+            // Set the buttons.
+            this.UpdateMap();
+        }
+
+        /// <summary>
+        /// Updates the content of the map.
+        /// </summary>
+        private void UpdateMap()
+        {
+            Map map = this.game.Human.Map;
 
             // Button rendering.
             Task.Factory.StartNew(() =>
             {
-                for (i = 0; i < dimension.Height; i++)
+                List<Ship> ships = map.Ships;
+
+                for (int i = 0; i < map.Dimension.Height; i++)
                 {
-                    for (int j = 0; j < dimension.Width; j++)
+                    for (int j = 0; j < map.Dimension.Width; j++)
                     {
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
@@ -105,9 +119,124 @@ namespace BattleShip.Views
                 }
             });
         }
+
+        /// <summary>
+        /// Builds the shots map.
+        /// </summary>
+        private void BuildShots()
+        {
+            Dimension dimension = this.game.Computer.Map.Dimension;
+            this.SetGridDimension(this.mapShots, dimension);
+
+            this.UpdateShots();
+        }
+
+        private void UpdateShots()
+        {
+            Map map = this.game.Computer.Map;
+
+            // Button rendering.
+            Task.Factory.StartNew(() =>
+            {
+                List<Shot> playerShots = this.game.Shots.Where(shot => shot.Player.IsHuman).ToList();
+
+                for (int i = 0; i < map.Dimension.Height; i++)
+                {
+                    for (int j = 0; j < map.Dimension.Width; j++)
+                    {
+                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
+                        {
+                            Button button = new Button();
+                            Shot shot = playerShots.FirstOrDefault(s => s.Cell.X == i && s.Cell.Y == j);
+
+                            if (shot != null)
+                            {
+                                if (shot.IsSuccessful)
+                                {
+                                    button.Background = this.SHOT_SUCCESS;
+                                } else
+                                {
+                                    button.Background = this.SHOT_FAILED;
+                                }
+                            } else
+                            {
+                                button.Background = this.NO_SHOT;
+                            }
+
+                            // Button logic.
+                            button.Click += this.Hit_Map;
+
+                            Grid.SetColumn(button, i);
+                            Grid.SetRow(button, j);
+
+                            this.mapShots.Children.Add(button);
+                        }));
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sets the dimensions of the grid.
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="dimension"></param>
+        private void SetGridDimension(Grid grid, Dimension dimension)
+        {
+            int i;
+
+            // Clears out the grid.
+            this.ClearGrid(grid);
+
+            for (i = 0; i < dimension.Width; i++)
+            {
+                ColumnDefinition column = new ColumnDefinition();
+                grid.ColumnDefinitions.Add(column);
+            }
+
+            for (i = 0; i < dimension.Height; i++)
+            {
+                RowDefinition row = new RowDefinition();
+                grid.RowDefinitions.Add(row);
+            }
+        }
+
+        /// <summary>
+        /// Clears out the grid.
+        /// </summary>
+        /// <param name="grid"></param>
+        private void ClearGrid(Grid grid)
+        {
+            grid.Children.Clear();
+            grid.ColumnDefinitions.Clear();
+            grid.RowDefinitions.Clear();
+        }
+
+        /// <summary>
+        /// Triggers the AI to play.
+        /// </summary>
+        private void TriggerAI()
+        {
+            System.Console.WriteLine("AI has been triggered.");
+            // TODO: Implement.
+            // Refresh all.
+        }
         #endregion
 
         #region Events
+        private void Hit_Map(object sender, RoutedEventArgs e)
+        {
+            // TODO: Replace by user control.
+            Cell cell = new Cell(0, 0);
+            Map foo = this.game.Computer.Map;
+
+            // Hits the cell.
+            this.gameHandler.Hit(cell, foo, this.game.Human, this.game);
+
+            this.UpdateShots();
+
+            this.TriggerAI();
+        }
         #endregion
     }
 }

@@ -63,12 +63,14 @@ namespace BattleShip.Models
         public Game()
         {
             this.ShipConfigurations = new List<ShipConfiguration>();
+            this.Shots = new List<Shot>();
         }
 
         public Game(Player human, Player computer): this()
         {
             this.Human = human;
             this.Computer = computer;
+            this.Shots = new List<Shot>();
         }
 
         public Game(Player human, Player computer, List<ShipConfiguration> shipConfigurations)
@@ -76,6 +78,7 @@ namespace BattleShip.Models
             this.Human = human;
             this.Computer = computer;
             this.ShipConfigurations = shipConfigurations;
+            this.Shots = new List<Shot>();
         }
         #endregion
 
