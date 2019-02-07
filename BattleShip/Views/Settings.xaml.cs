@@ -26,13 +26,6 @@ namespace BattleShip.Views
     /// </summary>
     public partial class Settings : Page
     {
-
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
         #region Variables
         ObservableCollection<Game> games = new ObservableCollection<Game>();
         ObservableCollection<Ship> ships = new ObservableCollection<Ship>();
@@ -56,7 +49,7 @@ namespace BattleShip.Views
             set
             {
                 mapWidth = value;
-                ResizeMap(this.gameGridPlayer1);
+                ResizeMap(this.gameGridLeft);
             }
         }
 
@@ -66,10 +59,7 @@ namespace BattleShip.Views
             set
             {
                 mapHeight = value;
-                ResizeMap(this.gameGridPlayer1);
-
-                // TODO: Remove.
-                //this.StartPlaying();
+                ResizeMap(this.gameGridLeft);
             }
         }
         #endregion
@@ -101,11 +91,11 @@ namespace BattleShip.Views
             // Default configurations modified by the user.
             List<ShipConfiguration> configurations = new List<ShipConfiguration>()
             {
-                new ShipConfiguration(Models.ShipType.Carrier, new Dimension(2, 1), 2),
-                new ShipConfiguration(Models.ShipType.Cruiser, new Dimension(2, 1), 2),
-                new ShipConfiguration(Models.ShipType.Submarine, new Dimension(2, 1), 2),
-                new ShipConfiguration(Models.ShipType.Destroyer, new Dimension(2, 1), 2),
-                new ShipConfiguration(Models.ShipType.BattleShip, new Dimension(2, 1), 2),
+                new ShipConfiguration(Models.ShipType.Destroyer, new Dimension(2, 1), 1),
+                new ShipConfiguration(Models.ShipType.Cruiser, new Dimension(3, 1), 1),
+                new ShipConfiguration(Models.ShipType.Submarine, new Dimension(3, 1), 1),
+                new ShipConfiguration(Models.ShipType.BattleShip, new Dimension(4, 1), 1),
+                new ShipConfiguration(Models.ShipType.Carrier, new Dimension(5, 1), 1),
             };
 
             // TODO: View modifies the configurations.
@@ -133,13 +123,13 @@ namespace BattleShip.Views
             gridName.ColumnDefinitions.Clear();
             gridName.RowDefinitions.Clear();
 
-            for (int i = 0; i < this.MapHeight; i++)
+            for (int i = 0; i < this.MapWidth; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
                 gridName.ColumnDefinitions.Add(col);
             }
 
-            for (int i = 0; i < this.MapWidth; i++)
+            for (int i = 0; i < this.MapHeight; i++)
             {
                 RowDefinition row = new RowDefinition();
                 gridName.RowDefinitions.Add(row);
@@ -147,14 +137,14 @@ namespace BattleShip.Views
 
             Task.Factory.StartNew(() =>
             {
-                for (int i = 0; i < this.MapHeight; i++)
+                for (int i = 0; i < this.MapWidth; i++)
                 {
-                    for (int j = 0; j < this.MapWidth; j++)
+                    for (int j = 0; j < this.MapHeight; j++)
                     {
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
                             Button btn = new Button();
-                            btn.Content = "H:" + i + "W:" + j;
+                            btn.Content = "W:" + i + "H:" + j;
                             Grid.SetColumn(btn, i);
                             Grid.SetRow(btn, j);
 
@@ -182,9 +172,17 @@ namespace BattleShip.Views
         #region Events
         private void BtnStartGame(object sender, RoutedEventArgs e)
         {
-            //StartPlaying();
+            StartPlaying();
+        }
+        private void BtnAddShip(object sender, RoutedEventArgs e)
+        {
+            //AddShip(ship);
         }
         #endregion
 
+        private void MapWidthTxt_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

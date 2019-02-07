@@ -24,9 +24,6 @@ namespace BattleShip.Views
     {
 
         #region Constructors
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
