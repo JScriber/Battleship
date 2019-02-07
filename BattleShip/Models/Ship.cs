@@ -51,9 +51,10 @@ namespace BattleShip.Models
         /// </summary>
         public Ship()
         {
+            this.cells = new List<Cell>();
         }
         
-        public Ship(ShipType type, Dimension dimension)
+        public Ship(ShipType type, Dimension dimension): this()
         {
             this.type = type;
             this.dimension = dimension;

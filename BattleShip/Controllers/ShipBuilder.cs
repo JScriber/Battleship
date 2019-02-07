@@ -65,7 +65,8 @@ namespace BattleShip.Controllers
                 {
                     for (int j = y; j < y + dimension.Height; j++)
                     {
-                        ship.Cells.Add(new Cell(i, j));
+                        Cell cell = new Cell(i, j);
+                        ship.Cells.Add(cell);
                     }
                 }
 
