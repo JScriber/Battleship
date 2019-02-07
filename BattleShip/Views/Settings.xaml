@@ -105,8 +105,9 @@
 
             <Grid x:Name="shiplist" Grid.Row="0" Grid.Column="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="0.25*"/>
                     <ColumnDefinition/>
+                    <ColumnDefinition Width="0.25*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -116,17 +117,23 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <TextBlock x:Name="shipLabel1" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Destroy</TextBlock>
-                <TextBlock x:Name="shipLabel2" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Cruiser</TextBlock>
-                <TextBlock x:Name="shipLabel3" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Submarine</TextBlock>
-                <TextBlock x:Name="shipLabel4" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">BattleShip</TextBlock>
-                <TextBlock x:Name="shipLabel5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Carrier</TextBlock>
+                <TextBlock x:Name="shipSize1" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">2</TextBlock>
+                <TextBlock x:Name="shipSize2" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right">3</TextBlock>
+                <TextBlock x:Name="shipSize3" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right">3</TextBlock>
+                <TextBlock x:Name="shipSize4" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right">4</TextBlock>
+                <TextBlock x:Name="shipSize5" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right">5</TextBlock>
+                
+                <TextBlock x:Name="shipLabel1" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">Destroy</TextBlock>
+                <TextBlock x:Name="shipLabel2" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">Cruiser</TextBlock>
+                <TextBlock x:Name="shipLabel3" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">Submarine</TextBlock>
+                <TextBlock x:Name="shipLabel4" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">BattleShip</TextBlock>
+                <TextBlock x:Name="shipLabel5" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">Carrier</TextBlock>
 
-                <Button x:Name="btnAddShip1" Grid.Column="1" Grid.Row="0">+</Button>
-                <Button x:Name="btnAddShip2" Grid.Column="1" Grid.Row="1">+</Button>
-                <Button x:Name="btnAddShip3" Grid.Column="1" Grid.Row="2">+</Button>
-                <Button x:Name="btnAddShip4" Grid.Column="1" Grid.Row="3">+</Button>
-                <Button x:Name="btnAddShip5" Grid.Column="1" Grid.Row="4">+</Button>
+                <Button x:Name="btnAddShip1" Grid.Column="2" Grid.Row="0">+</Button>
+                <Button x:Name="btnAddShip2" Grid.Column="2" Grid.Row="1">+</Button>
+                <Button x:Name="btnAddShip3" Grid.Column="2" Grid.Row="2">+</Button>
+                <Button x:Name="btnAddShip4" Grid.Column="2" Grid.Row="3">+</Button>
+                <Button x:Name="btnAddShip5" Grid.Column="2" Grid.Row="4">+</Button>
             </Grid>
 
             <ListView x:Name="shipListAdded" Grid.Column="4"
