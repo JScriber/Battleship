@@ -22,6 +22,7 @@ namespace BattleShip.Models
         private Player human;
         private Player computer;
         private List<Shot> shots;
+        private List<ShipConfiguration> shipConfigurations;
         #endregion
 
         #region Properties
@@ -45,6 +46,14 @@ namespace BattleShip.Models
             get { return shots; }
             set { shots = value; }
         }
+
+
+        public List<ShipConfiguration> ShipConfigurations
+        {
+            get { return shipConfigurations; }
+            set { shipConfigurations = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -53,13 +62,20 @@ namespace BattleShip.Models
         /// </summary>
         public Game()
         {
-
+            this.ShipConfigurations = new List<ShipConfiguration>();
         }
 
-        public Game(Player human, Player computer)
+        public Game(Player human, Player computer): this()
         {
-            this.human = human;
-            this.computer = computer;
+            this.Human = human;
+            this.Computer = computer;
+        }
+
+        public Game(Player human, Player computer, List<ShipConfiguration> shipConfigurations)
+        {
+            this.Human = human;
+            this.Computer = computer;
+            this.ShipConfigurations = shipConfigurations;
         }
         #endregion
 

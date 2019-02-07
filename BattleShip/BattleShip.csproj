@@ -62,7 +62,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\GameBuilder.cs" />
     <Compile Include="Controllers\ShipBuilder.cs" />
+    <Compile Include="Models\ShipConfiguration.cs" />
     <Compile Include="Models\Shot.cs" />
     <Compile Include="Views\GameSettings.xaml.cs">
       <DependentUpon>GameSettings.xaml</DependentUpon>
@@ -76,7 +78,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\GameHandler.cs" />
-    <Compile Include="Controllers\MapHandler.cs" />
     <Compile Include="Database\ApplicationDbContext.cs" />
     <Compile Include="Exceptions\OutOfBoundException.cs" />
     <Compile Include="Exceptions\OverlapException.cs" />

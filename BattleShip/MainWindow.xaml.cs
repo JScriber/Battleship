@@ -59,42 +59,42 @@ namespace BattleShip
             // Default configurations.
             this.AddDefaultTypes();
 
-            InitializeComponent();
-
             this.Test();
+
+            InitializeComponent();
         }
 
         private void Test()
         {
-            using (var db = new ApplicationDbContext())
+            Dimension dimension = new Dimension(10, 10);
+
+            // Builders.
+            var gb = new GameBuilder();
+            var sb = new ShipBuilder(dimension);
+
+            // Default configurations modified by the user.
+            List<ShipConfiguration> configurations = new List<ShipConfiguration>()
             {
-                // Base configuration.
-                Ship carrier = new Ship(Models.ShipType.Carrier, new Dimension(2, 1));
-                Ship cruiser = new Ship(Models.ShipType.Cruiser, new Dimension(3, 1));
-                Ship submarine = new Ship(Models.ShipType.Submarine, new Dimension(3, 1));
-                Ship destroyer = new Ship(Models.ShipType.Destroyer, new Dimension(3, 1));
-                Ship battleShip = new Ship(Models.ShipType.BattleShip, new Dimension(4, 1));
+                new ShipConfiguration(Models.ShipType.Carrier, new Dimension(2, 1), 2),
+                new ShipConfiguration(Models.ShipType.Cruiser, new Dimension(2, 1), 2),
+                new ShipConfiguration(Models.ShipType.Submarine, new Dimension(2, 1), 2),
+                new ShipConfiguration(Models.ShipType.Destroyer, new Dimension(2, 1), 2),
+                new ShipConfiguration(Models.ShipType.BattleShip, new Dimension(2, 1), 2),
+            };
 
-                Dimension dimension = new Dimension(10, 10);
+            // TODO: View modifies the configurations.
+            List<Ship> ships = new List<Ship>()
+            {
+                sb.FromConfiguration(configurations[0], 1, 1, false),
+                sb.FromConfiguration(configurations[1], 1, 1, true),
+                sb.FromConfiguration(configurations[2], 1, 1, true),
+            };
 
-                // Builders.
-                var sb = new ShipBuilder(dimension);
+            Game game = gb.CreateGame(configurations, ships, dimension);
 
-
-                // Create human map.
-                Map humanMap = new Map(dimension);
-                humanMap.Ships = new List<Ship>()
-                {
-                    sb.FromModel(carrier, 1, 1, false),
-                    sb.FromModel(destroyer, 5, 6, true)
-                };
-
-                Player human = new Player(true, humanMap);
-
-                Game game = new Game(human, null);
-
-                db.DbGame.Add(game);
-                db.SaveChanges();
+            foreach (var ship in game.Human.Map.Ships)
+            {
+                System.Console.WriteLine(ship.Type);
             }
         }
 

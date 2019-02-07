@@ -39,8 +39,8 @@ namespace BattleShip.Models
 
         public Player(bool isHuman, Map map)
         {
-            this.isHuman = isHuman;
-            this.map = map;
+            this.IsHuman = isHuman;
+            this.Map = map;
         }
         #endregion
     }

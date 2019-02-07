@@ -48,9 +48,9 @@ namespace BattleShip.Controllers
         #endregion
 
         #region Functions
-        public Ship FromModel(Ship model, int x, int y, bool rotated)
+        public Ship FromConfiguration(ShipConfiguration configuration, int x, int y, bool rotated)
         {
-            Dimension dimension = new Dimension(model.Dimension);
+            Dimension dimension = new Dimension(configuration.Dimension);
 
             if (this.FitBounds(x, y, dimension))
             {
@@ -59,7 +59,7 @@ namespace BattleShip.Controllers
                     // TODO: Invert dimension.
                 }
 
-                Ship ship = new Ship(model.Type, model.Dimension);
+                Ship ship = new Ship(configuration.Type, configuration.Dimension);
 
                 for (int i = x; i < x + dimension.Width; i++)
                 {
