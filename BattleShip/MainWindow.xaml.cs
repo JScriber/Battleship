@@ -90,7 +90,10 @@ namespace BattleShip
                 sb.FromConfiguration(configurations[2], 1, 1, true),
             };
 
-            Game game = gb.CreateGame(configurations, ships, dimension);
+            // Random placement for IA.
+            List<Ship> robotShips = sb.RandomFromConfigurations(configurations);
+
+            Game game = gb.CreateGame(configurations, ships, robotShips, dimension);
 
             foreach (var ship in game.Human.Map.Ships)
             {

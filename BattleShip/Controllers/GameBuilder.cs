@@ -41,18 +41,26 @@ namespace BattleShip.Controllers
         #endregion
 
         #region Functions
-        public Game CreateGame(List<ShipConfiguration> configurations, List<Ship> ships, Dimension dimension)
+        /// <summary>
+        /// Initiates the game.
+        /// </summary>
+        /// <param name="configurations"></param>
+        /// <param name="humanShips"></param>
+        /// <param name="robotShips"></param>
+        /// <param name="dimension"></param>
+        /// <returns></returns>
+        public Game CreateGame(List<ShipConfiguration> configurations, List<Ship> humanShips, List<Ship> robotShips, Dimension dimension)
         {
             using (var db = new ApplicationDbContext())
             {
                 // Create human map.
                 Map humanMap = new Map(dimension);
-                humanMap.Ships = ships;
+                humanMap.Ships = humanShips;
 
                 // Create IA map.
                 Map robotMap = new Map(dimension);
                 // TODO: Generate ships based on the configuration.
-                robotMap.Ships = new List<Ship>();
+                robotMap.Ships = robotShips;
 
                 // Persist the maps.
                 db.DbMap.Add(humanMap);
@@ -65,15 +73,13 @@ namespace BattleShip.Controllers
                 // Create the game
                 Game game = new Game(human, robot, configurations);
 
+                // Save the initial state of the game.
                 db.DbGame.Add(game);
                 db.SaveChanges();
 
                 return game;
             }
         }
-        #endregion
-
-        #region Events
         #endregion
     }
 }

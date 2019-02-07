@@ -12,21 +12,17 @@ namespace BattleShip.Controllers
 {
     public class ShipBuilder
     {
-
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-        #endregion
-
         #region Attributs
         private Dimension bounds;
         #endregion
 
         #region Properties
+        public Dimension Bounds
+        {
+            get { return bounds; }
+            set { bounds = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -40,7 +36,7 @@ namespace BattleShip.Controllers
 
         public ShipBuilder(Dimension bounds)
         {
-            this.bounds = bounds;
+            this.Bounds = bounds;
         }
         #endregion
 
@@ -52,13 +48,16 @@ namespace BattleShip.Controllers
         {
             Dimension dimension = new Dimension(configuration.Dimension);
 
+            if (rotated)
+            {
+                int width = dimension.Width;
+                dimension.Width = dimension.Height;
+                dimension.Height = width;
+            }
+
             if (this.FitBounds(x, y, dimension))
             {
-                if (rotated)
-                {
-                    // TODO: Invert dimension.
-                }
-
+                // Make a ship from the configuration.
                 Ship ship = new Ship(configuration.Type, configuration.Dimension);
 
                 for (int i = x; i < x + dimension.Width; i++)
@@ -76,16 +75,33 @@ namespace BattleShip.Controllers
             throw new OutOfBoundException();
         }
 
+        /// <summary>
+        /// Creates random ships from the configurations.
+        /// </summary>
+        /// <param name="shipConfigurations"></param>
+        /// <returns></returns>
+        public List<Ship> RandomFromConfigurations(List<ShipConfiguration> shipConfigurations)
+        {
+            List<Ship> ships = new List<Ship>();
+
+            // TODO: Implement.
+
+            return ships;
+        }
+
+        /// <summary>
+        /// Says if the position fits in the bounds.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="dimension"></param>
+        /// <returns></returns>
         private bool FitBounds(int x, int y, Dimension dimension)
         {
-            // TODO: Test if fit bounds.
-            return true;
+            return x >= 0 && y >= 0
+                && x + dimension.Width < this.Bounds.Width
+                && y + dimension.Height < this.Bounds.Height;
         }
         #endregion
-
-        #region Events
-        #endregion
-
-
     }
 }
