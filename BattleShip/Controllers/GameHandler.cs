@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BattleShip.Models;
 using BattleShip.Models.Utils;
 using BattleShip.Exceptions;
+using BattleShip.Database;
 
 namespace BattleShip.Controllers
 {
@@ -22,6 +23,17 @@ namespace BattleShip.Controllers
         #endregion
 
         #region Attributs
+        private ApplicationDbContext dbContext;
+        #endregion
+
+        #region Properties
+
+        public ApplicationDbContext DbContext
+        {
+            get { return dbContext; }
+            set { dbContext = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -30,7 +42,7 @@ namespace BattleShip.Controllers
         /// </summary>
         public GameHandler()
         {
-
+            this.DbContext = new ApplicationDbContext();
         }
         #endregion
 
@@ -54,7 +66,8 @@ namespace BattleShip.Controllers
                 // Logs the shot.
                 // TODO: persist shots by passing by the db.
                 Shot shot = new Shot(success, player, cell, map);
-                game.Shots.Add(shot);
+
+                this.SaveShot(game, shot);
             }
         }
 
@@ -128,6 +141,24 @@ namespace BattleShip.Controllers
             return cell.X >= 0 && cell.Y >= 0
                 && cell.X < dimensions.Width
                 && cell.Y < dimensions.Height;
+        }
+
+        /// <summary>
+        /// Saves a shot in the game.
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="shot"></param>
+        private void SaveShot(Game game, Shot shot)
+        {
+            game.Shots.Add(shot);
+
+            using (var dbcontext = this.DbContext)
+            {
+                // Add a shot to the list of shots.
+                dbcontext.DbGame.Where(g => g.id == game.id).First().Shots.Add(shot);
+
+                dbcontext.SaveChanges();
+            }
         }
         #endregion
 

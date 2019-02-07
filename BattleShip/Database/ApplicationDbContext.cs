@@ -75,7 +75,7 @@ namespace BattleShip.Database
         /// </summary>
         public ApplicationDbContext()
         {
-            this.Database.Initialize(true);
+            //this.Database.Initialize(true);
             this.DevResetDatabase();
         }
         #endregion
