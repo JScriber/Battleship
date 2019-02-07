@@ -19,12 +19,12 @@
         <Grid.RowDefinitions>
             <RowDefinition x:Name="marginLeft" Height="5"/>
             <RowDefinition/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition/>
             <RowDefinition x:Name="marginRight" Height="5"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="infoGrid" Grid.Row="1" Grid.Column="1">
+        <Grid x:Name="infoGridLeft" Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -35,17 +35,39 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+
             <TextBlock x:Name="mapWidthLabel" Grid.Row="0" Grid.Column="1">Map Width</TextBlock>
             <TextBox x:Name="mapWidthTxt" Grid.Row="1" Grid.Column="1" Text="{Binding MapWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-
             <TextBlock x:Name="mapHeightLabel" Grid.Row="0" Grid.Column="2">Map Height</TextBlock>
             <TextBox x:Name="mapHeightTxt" Grid.Row="1" Grid.Column="2" Text="{Binding MapHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-
         </Grid>
 
+        <Grid x:Name="shipGridLeft" Grid.Row="3" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ListView x:Name="shipList" Grid.Column="1"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Name="class1Data" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="{Binding Data}" VerticalAlignment="Center" Padding="10,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        
         <Grid x:Name="gameGridPlayer1" Grid.Row="2" Grid.Column="1"></Grid>
-        
+
         <Grid x:Name="gameGridPlayer2" Grid.Row="2" Grid.Column="3"></Grid>
-        
+
     </Grid>
 </Page>
