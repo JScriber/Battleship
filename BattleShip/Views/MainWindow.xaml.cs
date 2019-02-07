@@ -20,27 +20,8 @@ using BattleShip.Controllers;
 
 namespace BattleShip.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-
-        #endregion
-
-        #region Attributs
-        #endregion
-
-        #region Properties
-        public ObservableCollection<Ship> ShipType { get; set; }
-        #endregion
 
         #region Constructors
         /// <summary>
@@ -48,54 +29,9 @@ namespace BattleShip.Views
         /// </summary>
         public MainWindow()
         {
-            this.ShipType = new ObservableCollection<Ship>();
-
-            // Default configurations.
-            this.AddDefaultTypes();
-            
             InitializeComponent();
             this.Content = new Settings();
-
-            InitializeComponent();
-        }
-
-        
-
-        /// <summary>
-        /// Setups the default configuration.
-        /// </summary>
-        private void AddDefaultTypes()
-        {
-
-        }
-
-        /// <summary>
-        /// Adds the ship into the selectable ships.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        private void AddShip(ShipType type, int width, int height)
-        {
-            Dimension dimension = new Dimension(width, height);
-            Ship ship = new Ship(type, dimension);
-
-            this.ShipType.Add(ship);
         }
         #endregion
-
-        #region StaticFunctions
-        #endregion
-
-        #region Functions
-        #endregion
-
-        #region Events
-        #endregion
-
-        private void ShipSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

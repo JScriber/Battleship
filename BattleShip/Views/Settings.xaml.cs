@@ -77,6 +77,7 @@ namespace BattleShip.Views
         /// </summary>
         public Settings()
         {
+            this.ShipType = new ObservableCollection<Ship>();
             InitializeComponent();
             this.DataContext = this;
         }
@@ -160,9 +161,21 @@ namespace BattleShip.Views
                 }
             });
         }
+
+        private void AddShip(ShipType type, int width, int height)
+        {
+            Dimension dimension = new Dimension(width, height);
+            Ship ship = new Ship(type, dimension);
+
+            this.ShipType.Add(ship);
+        }
         #endregion
 
         #region Events
+        private void BtnStartGame(object sender, RoutedEventArgs e)
+        {
+            //StartPlaying();
+        }
         #endregion
 
     }
