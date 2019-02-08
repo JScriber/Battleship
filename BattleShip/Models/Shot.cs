@@ -55,7 +55,6 @@ namespace BattleShip.Models
             get { return map; }
             set { map = value; }
         }
-
         #endregion
 
         #region Constructors

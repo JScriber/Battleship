@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,15 @@ namespace BattleShip.Models
         {
             get { return isHuman; }
             set { isHuman = value; }
+        }
+
+        [NotMapped]
+        public bool HasLost
+        {
+            get
+            {
+                return this.Map.Ships.All(ship => ship.Sunk);
+            }
         }
         #endregion
 

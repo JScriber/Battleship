@@ -50,21 +50,52 @@ namespace BattleShip.Controllers
         #endregion
 
         #region Functions
-
-        public void Hit(Cell cell, Map map, Player player, Game game)
+        public void AIPlay(Game game)
         {
-            if (this.CanShot(cell, map, game))
+            Map foo = game.Human.Map;
+            Cell[,] cells = foo.MatrixRepresentation;
+            Dimension dimension = foo.Dimension;
+
+            // All shots of the AI.
+            List<Shot> shots = game.Shots.Where(shot => !shot.Player.IsHuman).ToList();
+
+            Random random = new Random();
+            int x, y;
+
+            do
             {
-                Ship ship = this.FindShip(map, cell);
-                bool success = ship != null;
+                x = random.Next(0, dimension.Width);
+                y = random.Next(0, dimension.Height);
+            } while (shots.Any(shot => shot.Cell.X == x && shot.Cell.Y == y));
+
+            this.Hit(x, y, foo, game.Computer, game);
+        }
+
+        /// <summary>
+        /// Hits at the given coordinates.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="map"></param>
+        /// <param name="player"></param>
+        /// <param name="game"></param>
+        public void Hit(int x, int y, Map map, Player player, Game game)
+        {
+            if (this.CanShot(x, y, map, game))
+            {
+                Cell cell = map.MatrixRepresentation[x, y];
+                bool success = cell != null;
 
                 if (success)
                 {
-                    this.HitShip(ship, cell);
+                    this.HitShip(cell);
+                } else
+                {
+                    // Cell with no ship.
+                    cell = new Cell(x, y);
                 }
 
                 // Logs the shot.
-                // TODO: persist shots by passing by the db.
                 Shot shot = new Shot(success, player, cell, map);
 
                 this.SaveShot(game, shot);
@@ -74,14 +105,19 @@ namespace BattleShip.Controllers
         /// <summary>
         /// Says if the player can hit at the given coordinates.
         /// </summary>
-        /// <param name="cell"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <param name="map"></param>
         /// <param name="game"></param>
         /// <returns></returns>
-        public bool CanShot(Cell cell, Map map, Game game)
+        public bool CanShot(int x, int y, Map map, Game game)
         {
+            List<Shot> shots = game.Shots;
+
             // Test if a shot hasn't been done in the same map before.
-            return game.Shots.First(shot => shot.Map == map && shot.Cell == cell) == null;
+            Shot shot = shots.Find(s => s.Map.id == map.id && s.Cell.X == x && s.Cell.Y == y);
+            
+            return shot == null;
         }
 
         /// <summary>
@@ -89,8 +125,10 @@ namespace BattleShip.Controllers
         /// </summary>
         /// <param name="ship"></param>
         /// <param name="target"></param>
-        private void HitShip(Ship ship, Cell target)
+        private void HitShip(Cell target)
         {
+            Ship ship = target.Ship;
+
             if (!this.HasSunk(ship))
             {
                 int x = target.X;
@@ -120,7 +158,7 @@ namespace BattleShip.Controllers
         {
             if (this.CellInMap(cell, map))
             {
-                return map.Ships.First(ship => ship.Cells.Any(c => c.X == cell.X && c.Y == cell.Y));
+                return map.Ships.FirstOrDefault(ship => ship.Cells.Any(c => this.CellsAreEqual(c, cell)));
             }
             else
             {
@@ -144,6 +182,18 @@ namespace BattleShip.Controllers
         }
 
         /// <summary>
+        /// Says if two cells are equal.
+        /// </summary>
+        /// <param name="compared"></param>
+        /// <param name="comparing"></param>
+        /// <returns></returns>
+        private bool CellsAreEqual(Cell compared, Cell comparing)
+        {
+            return compared.X == comparing.X &&
+                compared.Y == comparing.Y;
+        }
+
+        /// <summary>
         /// Saves a shot in the game.
         /// </summary>
         /// <param name="game"></param>
@@ -151,14 +201,11 @@ namespace BattleShip.Controllers
         private void SaveShot(Game game, Shot shot)
         {
             game.Shots.Add(shot);
+            
+            // Add a shot to the list of shots.
+            this.DbContext.DbGame.Where(g => g.id == game.id).First().Shots.Add(shot);
 
-            using (var dbcontext = this.DbContext)
-            {
-                // Add a shot to the list of shots.
-                dbcontext.DbGame.Where(g => g.id == game.id).First().Shots.Add(shot);
-
-                dbcontext.SaveChanges();
-            }
+            this.DbContext.SaveChanges();
         }
         #endregion
 

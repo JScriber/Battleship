@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,24 @@ namespace BattleShip.Models
             set { ships = value; }
         }
 
+        [NotMapped]
+        public Cell[,] MatrixRepresentation
+        {
+            get
+            {
+                Cell[,] cells = new Cell[this.Dimension.Width, this.Dimension.Height];
+
+                foreach (var ship in this.Ships)
+                {
+                    foreach (var cell in ship.Cells)
+                    {
+                        cells[cell.X, cell.Y] = cell;
+                    }
+                }
+
+                return cells;
+            }
+        }
         #endregion
 
         #region Constructors

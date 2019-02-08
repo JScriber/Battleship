@@ -13,6 +13,7 @@ namespace BattleShip.Models.Utils
         private int x;
         private int y;
         private bool isDestroyed;
+        private Ship ship;
         #endregion
 
         #region Properties
@@ -37,6 +38,11 @@ namespace BattleShip.Models.Utils
             set { isDestroyed = value; }
         }
 
+        public Ship Ship
+        {
+            get { return ship; }
+            set { ship = value; }
+        }
         #endregion
 
         #region Constructors
@@ -49,7 +55,12 @@ namespace BattleShip.Models.Utils
         {
             this.X = x;
             this.Y = y;
+        }
+
+        public Cell(int x, int y, Ship ship): this(x, y)
+        {
             this.IsDestroyed = false;
+            this.Ship = ship;
         }
         #endregion 
     }

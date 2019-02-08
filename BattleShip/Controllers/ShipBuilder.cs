@@ -64,7 +64,7 @@ namespace BattleShip.Controllers
                 {
                     for (int j = y; j < y + dimension.Height; j++)
                     {
-                        Cell cell = new Cell(i, j);
+                        Cell cell = new Cell(i, j, ship);
                         ship.Cells.Add(cell);
                     }
                 }
@@ -72,21 +72,76 @@ namespace BattleShip.Controllers
                 return ship;
             }
 
-            throw new OutOfBoundException();
+            return null;
         }
 
         /// <summary>
-        /// Creates random ships from the configurations.
+        /// Creates a random map based on the configurations.
         /// </summary>
         /// <param name="shipConfigurations"></param>
         /// <returns></returns>
-        public List<Ship> RandomFromConfigurations(List<ShipConfiguration> shipConfigurations)
+        public Map RandomFromConfigurations(List<ShipConfiguration> shipConfigurations)
         {
-            List<Ship> ships = new List<Ship>();
+            Map map = new Map(this.Bounds);
 
-            // TODO: Implement.
+            if (this.ConfigurationFitsInMap(shipConfigurations))
+            {
+                foreach (var configuration in shipConfigurations)
+                {
+                    int multiplicity = configuration.Multiplicity;
+                    Random random = new Random();
 
-            return ships;
+                    if (multiplicity > 0)
+                    {
+                        for (int i = 0; i < multiplicity; i++)
+                        {
+                            Ship ship = null;
+                            Dimension dimension = new Dimension(configuration.Dimension);
+
+                            do
+                            {
+                                // Determine if the ship is rotated.
+                                bool rotated = random.Next(2) == 1;
+
+                                if (rotated)
+                                {
+                                    int width = dimension.Width;
+                                    dimension.Width = dimension.Height;
+                                    dimension.Height = width;
+                                }
+
+                                int x = random.Next(0, this.Bounds.Width - dimension.Width);
+                                int y = random.Next(0, this.Bounds.Height - dimension.Height);
+                                
+                                if (this.FitBounds(x, y, dimension))
+                                {
+                                    ship = this.FromConfiguration(configuration, x, y, rotated);
+                                } else
+                                {
+                                    Console.WriteLine("Doesnt fit bounds");
+                                }
+                            } while (ship == null || this.ShipIntersects(ship, map));
+
+                            map.Ships.Add(ship);
+                        }
+                    }
+                }
+            }
+
+            // Debug purpose.
+            //foreach (var ship in map.Ships)
+            //{
+            //    Console.WriteLine("Ship AI. Width: " + ship.Dimension.Width + " Height: " + ship.Dimension.Height);
+
+            //    foreach (var cell in ship.Cells)
+            //    {
+            //        Console.WriteLine("Cell - X: " + cell.X + " Y: " + cell.Y);
+            //    }
+
+            //    Console.WriteLine("-----");
+            //}
+
+            return map;
         }
 
         /// <summary>
@@ -101,6 +156,60 @@ namespace BattleShip.Controllers
             return x >= 0 && y >= 0
                 && x + dimension.Width < this.Bounds.Width
                 && y + dimension.Height < this.Bounds.Height;
+        }
+
+        /// <summary>
+        /// Says if a list of configuration can fit in the dimension.
+        /// </summary>
+        /// <param name="shipConfigurations"></param>
+        /// <returns></returns>
+        public bool ConfigurationFitsInMap(List<ShipConfiguration> shipConfigurations)
+        {
+            int totalCells = this.Bounds.Width * this.Bounds.Height;
+            int shipCells = 0;
+
+            foreach (var shipConfiguration in shipConfigurations)
+            {
+                for (int i = 0; i < shipConfiguration.Multiplicity; i++)
+                {
+                    Dimension d = shipConfiguration.Dimension;
+                    shipCells += d.Width * d.Height;
+                }
+            }
+
+            return shipCells <= totalCells;
+        }
+
+        /// <summary>
+        /// Says if a ship intersects with another.
+        /// </summary>
+        /// <param name="ship"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        private bool ShipIntersects(Ship ship, Map map)
+        {
+            Cell[,] representation = map.MatrixRepresentation;
+
+            //Console.WriteLine("Map:");
+            //for (int i = 0; i < map.Dimension.Width; i++)
+            //{
+            //    for (int j = 0; j < map.Dimension.Height; j++)
+            //    {
+            //        Console.Write((representation[i, j] == null ? 0 : 1) + " |");
+            //    }
+
+            //    Console.WriteLine();
+            //}
+
+            foreach (var cell in ship.Cells)
+            {
+                if (representation[cell.X, cell.Y] != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
         #endregion
     }
