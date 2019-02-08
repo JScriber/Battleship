@@ -30,15 +30,6 @@ namespace BattleShip.Views
         #region StaticVariables
         #endregion
 
-        #region Constants
-        private readonly SolidColorBrush SHOT_SUCCESS = Brushes.Green;
-        private readonly SolidColorBrush SHOT_FAILED = Brushes.Red;
-        private readonly SolidColorBrush NO_SHOT = Brushes.Gray;
-
-        private readonly SolidColorBrush SHIP = Brushes.Blue;
-        private readonly SolidColorBrush NO_SHIP = Brushes.Gray;
-        #endregion
-
         #region Variables
         #endregion
 
@@ -258,17 +249,9 @@ namespace BattleShip.Views
         {
             bool computerHasWon = this.game.Human.HasLost;
 
-            if (computerHasWon)
+            if (this.game.Human.HasLost || this.game.Computer.HasLost)
             {
-                Console.WriteLine("The computer has won.");
-            } else
-            {
-                bool humanHasWon = this.game.Computer.HasLost;
-
-                if (humanHasWon)
-                {
-                    Console.WriteLine("The human has won.");
-                }
+                (this.Parent as Window).Content = new End(this.game.Human.HasLost);
             }
         }
         #endregion

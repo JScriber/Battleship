@@ -74,6 +74,9 @@
     <Compile Include="UserControls\ShotControl.xaml.cs">
       <DependentUpon>ShotControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\End.xaml.cs">
+      <DependentUpon>End.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Play.xaml.cs">
       <DependentUpon>Play.xaml</DependentUpon>
     </Compile>
@@ -85,6 +88,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\ShotControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\End.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
