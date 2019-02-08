@@ -56,11 +56,14 @@ namespace BattleShip.Views
         public End()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
 
-        public End(bool computerHasWon): this()
+        public End(bool computerHasWon)
         {
+            InitializeComponent();
             this.ComputerHasWon = computerHasWon;
+            this.DataContext = this;
         }
         #endregion
 
@@ -68,9 +71,17 @@ namespace BattleShip.Views
         #endregion
 
         #region Functions
+        private void RestartPlaying()
+        {
+            (this.Parent as Window).Content = new Settings();
+        }
         #endregion
 
         #region Events
+        private void BtnStartGame(object sender, RoutedEventArgs e)
+        {
+            RestartPlaying();
+        }
         #endregion
     }
 }

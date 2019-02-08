@@ -12,15 +12,6 @@ namespace BattleShip.Database
     public class ApplicationDbContext : DbContext
     {
 
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-        #endregion
-
         #region Attributs
         private DbSet<Game> dbGame;
         private DbSet<Map> dbMap;
@@ -80,9 +71,6 @@ namespace BattleShip.Database
         }
         #endregion
 
-        #region StaticFunctions
-        #endregion
-
         #region Functions
         private void DevResetDatabase()
         {
@@ -92,9 +80,6 @@ namespace BattleShip.Database
                 this.Database.Create();
             }
         }
-        #endregion
-
-        #region Events
         #endregion
     }
 }

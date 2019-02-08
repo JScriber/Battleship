@@ -190,17 +190,6 @@ namespace BattleShip.Controllers
         {
             Cell[,] representation = map.MatrixRepresentation;
 
-            //Console.WriteLine("Map:");
-            //for (int i = 0; i < map.Dimension.Width; i++)
-            //{
-            //    for (int j = 0; j < map.Dimension.Height; j++)
-            //    {
-            //        Console.Write((representation[i, j] == null ? 0 : 1) + " |");
-            //    }
-
-            //    Console.WriteLine();
-            //}
-
             foreach (var cell in ship.Cells)
             {
                 if (representation[cell.X, cell.Y] != null)
@@ -208,7 +197,6 @@ namespace BattleShip.Controllers
                     return true;
                 }
             }
-
             return false;
         }
         #endregion

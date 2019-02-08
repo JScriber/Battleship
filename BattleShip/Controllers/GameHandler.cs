@@ -12,16 +12,6 @@ namespace BattleShip.Controllers
 {
     public class GameHandler
     {
-
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-        #endregion
-
         #region Attributs
         private ApplicationDbContext dbContext;
         #endregion
@@ -33,7 +23,6 @@ namespace BattleShip.Controllers
             get { return dbContext; }
             set { dbContext = value; }
         }
-
         #endregion
 
         #region Constructors
@@ -45,10 +34,7 @@ namespace BattleShip.Controllers
             this.DbContext = new ApplicationDbContext();
         }
         #endregion
-
-        #region StaticFunctions
-        #endregion
-
+        
         #region Functions
         public void AIPlay(Game game)
         {
@@ -207,9 +193,6 @@ namespace BattleShip.Controllers
 
             this.DbContext.SaveChanges();
         }
-        #endregion
-
-        #region Events
         #endregion
     }
 }

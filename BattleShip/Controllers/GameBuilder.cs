@@ -11,22 +11,6 @@ namespace BattleShip.Controllers
 {
     public class GameBuilder
     {
-
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-        #endregion
-
-        #region Attributs
-        #endregion
-
-        #region Properties
-        #endregion
-
         #region Constructors
         /// <summary>
         /// Default constructor.
@@ -35,9 +19,6 @@ namespace BattleShip.Controllers
         {
 
         }
-        #endregion
-
-        #region StaticFunctions
         #endregion
 
         #region Functions

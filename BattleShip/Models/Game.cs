@@ -9,15 +9,6 @@ namespace BattleShip.Models
 {
     public class Game
     {
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-        #endregion
-
         #region Attributs
         private Player human;
         private Player computer;
@@ -81,16 +72,5 @@ namespace BattleShip.Models
             this.Shots = new List<Shot>();
         }
         #endregion
-
-        #region StaticFunctions
-        #endregion
-
-        #region Functions
-        #endregion
-
-        #region Events
-        #endregion
-
-
     }
 }

@@ -32,9 +32,6 @@ namespace BattleShip.UserControls
         private readonly String SUNK = "ship_dead.jpg";
         #endregion
 
-        #region Variables
-        #endregion
-
         #region Attributs
         private BitmapImage imageSource;
         private ShotState state;
@@ -113,13 +110,6 @@ namespace BattleShip.UserControls
             this.State = state;
         }
         #endregion
-
-        #region StaticFunctions
-        #endregion
-
-        #region Functions
-        #endregion
-
 
         #region Events
         private void Button_Click(object sender, RoutedEventArgs e)
