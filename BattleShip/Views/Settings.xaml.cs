@@ -27,22 +27,27 @@ namespace BattleShip.Views
     public partial class Settings : Page
     {
         #region Variables
-        ObservableCollection<Game> games = new ObservableCollection<Game>();
+        //ObservableCollection<Game> games = new ObservableCollection<Game>();
         ObservableCollection<Ship> ships = new ObservableCollection<Ship>();
-        ObservableCollection<Player> players = new ObservableCollection<Player>();
-        ObservableCollection<Map> map = new ObservableCollection<Map>();
-        ObservableCollection<Cell> coordinates = new ObservableCollection<Cell>();
-        ObservableCollection<Dimension> dimensions = new ObservableCollection<Dimension>();
+        //ObservableCollection<Player> players = new ObservableCollection<Player>();
+        //ObservableCollection<Map> map = new ObservableCollection<Map>();
+        //ObservableCollection<Cell> coordinates = new ObservableCollection<Cell>();
+        //ObservableCollection<Dimension> dimensions = new ObservableCollection<Dimension>();
         #endregion
 
         #region Attributs
         private int mapWidth;
         private int mapHeight;
+        private bool rotation;
+        private int positionX;
+        private int positionY;
+        private Dimension dimension;
+        private List<ShipConfiguration> configurationList;
+        private GameBuilder gb;
+        private ShipBuilder sb;
         #endregion
 
         #region Properties
-        public ObservableCollection<Ship> ShipType { get; set; }
-
         public int MapWidth
         {
             get { return mapWidth; }
@@ -50,6 +55,7 @@ namespace BattleShip.Views
             {
                 mapWidth = value;
                 ResizeMap(this.gameGridLeft);
+                dimension.Width = value;
             }
         }
 
@@ -60,7 +66,52 @@ namespace BattleShip.Views
             {
                 mapHeight = value;
                 ResizeMap(this.gameGridLeft);
+                dimension.Height = value;
             }
+        }
+
+        public bool Rotation
+        {
+            get { return rotation; }
+            set { rotation = value; }
+        }
+
+        public int PositionX
+        {
+            get { return positionX; }
+            set { positionX = value; }
+        }
+        
+        public int PositionY
+        {
+            get { return positionY; }
+            set { positionY = value; }
+        }
+
+        public Dimension Dimension
+        {
+            get { return dimension; }
+            set { dimension = value; }
+        }
+
+        public List<ShipConfiguration> ConfigurationList
+        {
+            get { return configurationList; }
+            set { configurationList = value; }
+        }
+
+        public ObservableCollection<Ship> Ships { get; set; }
+
+        public GameBuilder Gb
+        {
+            get { return gb; }
+            set { gb = value; }
+        }
+
+        public ShipBuilder Sb
+        {
+            get { return sb; }
+            set { sb = value; }
         }
         #endregion
 
@@ -70,8 +121,12 @@ namespace BattleShip.Views
         /// </summary>
         public Settings()
         {
-            this.ShipType = new ObservableCollection<Ship>();
+            this.Gb = new GameBuilder();
+            this.Dimension = new Dimension(MapWidth, MapHeight);
+            this.Sb = new ShipBuilder(dimension);
+
             InitializeComponent();
+
             BindListviews();
             this.DataContext = this;
         }
@@ -119,6 +174,9 @@ namespace BattleShip.Views
             gridName.ColumnDefinitions.Clear();
             gridName.RowDefinitions.Clear();
 
+            this.ConfigurationList = new List<ShipConfiguration>();
+            ships.Clear();
+
             for (int i = 0; i < this.MapWidth; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
@@ -140,7 +198,7 @@ namespace BattleShip.Views
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
                             Button btn = new Button();
-                            btn.Content = "W:" + i + "H:" + j;
+                            btn.Content = "X:" + i + "Y:" + j;
                             Grid.SetColumn(btn, i);
                             Grid.SetRow(btn, j);
 
@@ -149,6 +207,7 @@ namespace BattleShip.Views
                     }
                 }
             });
+
         }
 
         private void BindListviews()
@@ -159,10 +218,24 @@ namespace BattleShip.Views
         private void AddShip(ShipType type, int width, int height)
         {
             Dimension dimension = new Dimension(width, height);
-            Ship ship = new Ship(type, dimension);
+            ShipConfiguration configuration = new ShipConfiguration(type, dimension, 1);
+            
+            ConfigurationList.Add(configuration);
+            var lC = ConfigurationList.Last();
 
-            ships.Add(ship);
-            Console.WriteLine("type:" + ship.Type + " dimensions:" + ship.Dimension);
+            ships.Add(sb.FromConfiguration(lC, this.PositionX, this.PositionY, this.Rotation));
+
+            //TODO: Remove it
+            Console.WriteLine("-----ShipsList-----");
+            foreach (var ship in ships)
+            {
+                Console.Write("Type:" + ship.Type + " Cell[");
+                foreach (var cell in ship.Cells)
+                {
+                    Console.Write("x::" + cell.X + " y:" + cell.Y + " ");
+                }
+                Console.WriteLine("]");
+            }
         }
 
         private void StartPlaying()
@@ -173,36 +246,41 @@ namespace BattleShip.Views
         #endregion
 
         #region Events
-        private void BtnStartGame(object sender, RoutedEventArgs e)
-        {
-            StartPlaying();
-        }
-
         private void BtnAddShipType1(object sender, RoutedEventArgs e)
         {
-            AddShip(Models.ShipType.Destroyer, int.Parse(this.shipType1Size.Text), 1);
+            AddShip(Models.ShipType.Destroyer, 2, 1);
         }
         private void BtnAddShipType2(object sender, RoutedEventArgs e)
         {
-            AddShip(Models.ShipType.Cruiser, int.Parse(this.shipType2Size.Text), 1);
+            AddShip(Models.ShipType.Cruiser, 3, 1);
         }
         private void BtnAddShipType3(object sender, RoutedEventArgs e)
         {
-            AddShip(Models.ShipType.Submarine, int.Parse(this.shipType3Size.Text), 1);
+            AddShip(Models.ShipType.Submarine, 3, 1);
         }
         private void BtnAddShipType4(object sender, RoutedEventArgs e)
         {
-            AddShip(Models.ShipType.BattleShip, int.Parse(this.shipType4Size.Text), 1);
+            AddShip(Models.ShipType.BattleShip, 4, 1);
         }
         private void BtnAddShipType5(object sender, RoutedEventArgs e)
         {
-            AddShip(Models.ShipType.Carrier, int.Parse(this.shipType5Size.Text), 1);
+            AddShip(Models.ShipType.Carrier, 5, 1);
         }
 
         private void MapWidthTxt_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
+
+        private void BtnStartGame(object sender, RoutedEventArgs e)
+        {
+            StartPlaying();
+        }
         #endregion
+
+        private void ShipListAdded_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
