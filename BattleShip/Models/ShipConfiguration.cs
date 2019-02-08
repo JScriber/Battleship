@@ -28,7 +28,7 @@ namespace BattleShip.Models
 
         #region Properties
         [Key]
-        public int id { set; get; }
+        public int Id { set; get; }
 
         public ShipType Type
         {
@@ -62,7 +62,7 @@ namespace BattleShip.Models
         {
             this.type = type;
             this.dimension = dimension;
-            this.multiplicity = multiplicity;
+            this.multiplicity += multiplicity;
         }
         #endregion
 

@@ -65,5 +65,8 @@ namespace BattleShip.Models
             this.cells = cells;
         }
         #endregion
+        #region 
+
+        #endregion
     }
 }
