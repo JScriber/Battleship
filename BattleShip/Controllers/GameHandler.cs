@@ -50,17 +50,49 @@ namespace BattleShip.Controllers
         #endregion
 
         #region Functions
-
-        public void Hit(Cell cell, Map map, Player player, Game game)
+        public void AIPlay(Game game)
         {
-            if (this.CanShot(cell, map, game))
+            Map foo = game.Human.Map;
+            Cell[,] cells = foo.MatrixRepresentation;
+            Dimension dimension = foo.Dimension;
+
+            // All shots of the AI.
+            List<Shot> shots = game.Shots.Where(shot => !shot.Player.IsHuman).ToList();
+
+            Random random = new Random();
+            int x, y;
+
+            do
             {
-                Ship ship = this.FindShip(map, cell);
-                bool success = ship != null;
+                x = random.Next(0, dimension.Width);
+                y = random.Next(0, dimension.Height);
+            } while (shots.Any(shot => shot.Cell.X == x && shot.Cell.Y == y));
+
+            this.Hit(x, y, foo, game.Computer, game);
+        }
+
+        /// <summary>
+        /// Hits at the given coordinates.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="map"></param>
+        /// <param name="player"></param>
+        /// <param name="game"></param>
+        public void Hit(int x, int y, Map map, Player player, Game game)
+        {
+            if (this.CanShot(x, y, map, game))
+            {
+                Cell cell = map.MatrixRepresentation[x, y];
+                bool success = cell != null;
 
                 if (success)
                 {
-                    this.HitShip(ship, cell);
+                    this.HitShip(cell);
+                } else
+                {
+                    // Cell with no ship.
+                    cell = new Cell(x, y);
                 }
 
                 // Logs the shot.
@@ -73,16 +105,17 @@ namespace BattleShip.Controllers
         /// <summary>
         /// Says if the player can hit at the given coordinates.
         /// </summary>
-        /// <param name="cell"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <param name="map"></param>
         /// <param name="game"></param>
         /// <returns></returns>
-        public bool CanShot(Cell cell, Map map, Game game)
+        public bool CanShot(int x, int y, Map map, Game game)
         {
             List<Shot> shots = game.Shots;
 
             // Test if a shot hasn't been done in the same map before.
-            Shot shot = shots.Find(s => s.Map.id == map.id && this.CellsAreEqual(s.Cell, cell));
+            Shot shot = shots.Find(s => s.Map.id == map.id && s.Cell.X == x && s.Cell.Y == y);
             
             return shot == null;
         }
@@ -92,8 +125,10 @@ namespace BattleShip.Controllers
         /// </summary>
         /// <param name="ship"></param>
         /// <param name="target"></param>
-        private void HitShip(Ship ship, Cell target)
+        private void HitShip(Cell target)
         {
+            Ship ship = target.Ship;
+
             if (!this.HasSunk(ship))
             {
                 int x = target.X;

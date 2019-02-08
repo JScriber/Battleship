@@ -17,19 +17,19 @@ using System.Windows.Shapes;
 
 namespace BattleShip.UserControls
 {
-    public enum ShotState { None, Success, Fail, Sunk }
+    public enum ShipState { None, Alive, Attacked, Sunk, Missed }
 
     /// <summary>
-    /// Logique d'interaction pour ShotControl.xaml
+    /// Logique d'interaction pour ShipControl.xaml
     /// </summary>
-    public partial class ShotControl : UserControl, INotifyPropertyChanged
+    public partial class ShipControl : UserControl, INotifyPropertyChanged
     {
-
         #region Constants
-        private readonly String SUCCESS_SHOT = "ship_attacked.jpg";
-        private readonly String FAIL_SHOT = "missed_shot.jpg";
-        private readonly String NO_SHOT = "sea.jpg";
+        private readonly String ALIVE = "ship_alive.jpg";
+        private readonly String ATTACKED = "ship_attacked.jpg";
         private readonly String SUNK = "ship_dead.jpg";
+        private readonly String MISSED = "missed_shot.jpg";
+        private readonly String NONE = "sea.jpg";
         #endregion
 
         #region Variables
@@ -37,7 +37,7 @@ namespace BattleShip.UserControls
 
         #region Attributs
         private BitmapImage imageSource;
-        private ShotState state;
+        private ShipState state;
         private int x;
         private int y;
         #endregion
@@ -52,7 +52,7 @@ namespace BattleShip.UserControls
                 OnPropertyChanged("ImageSource");
             }
         }
-        
+
         public int X
         {
             get { return x; }
@@ -64,11 +64,12 @@ namespace BattleShip.UserControls
             get { return y; }
             set { y = value; }
         }
-        
-        public ShotState State
+
+        public ShipState State
         {
             get { return state; }
-            set {
+            set
+            {
                 state = value;
 
                 // Base link.
@@ -76,17 +77,20 @@ namespace BattleShip.UserControls
 
                 switch (state)
                 {
-                    case ShotState.Success:
-                        link += this.SUCCESS_SHOT;
+                    case ShipState.Alive:
+                        link += this.ALIVE;
                         break;
-                    case ShotState.Fail:
-                        link += this.FAIL_SHOT;
+                    case ShipState.Attacked:
+                        link += this.ATTACKED;
                         break;
-                    case ShotState.Sunk:
+                    case ShipState.Sunk:
                         link += this.SUNK;
                         break;
+                    case ShipState.Missed:
+                        link += this.MISSED;
+                        break;
                     default:
-                        link += this.NO_SHOT;
+                        link += this.NONE;
                         break;
                 }
 
@@ -100,13 +104,13 @@ namespace BattleShip.UserControls
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ShotControl()
+        public ShipControl()
         {
             InitializeComponent();
             this.DataContext = this;
         }
 
-        public ShotControl(int x, int y, ShotState state): this()
+        public ShipControl(int x, int y, ShipState state) : this()
         {
             this.X = x;
             this.Y = y;
@@ -118,15 +122,6 @@ namespace BattleShip.UserControls
         #endregion
 
         #region Functions
-        #endregion
-
-
-        #region Events
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            (((this.Parent as Grid).Parent as Grid).Parent as Play).HitMap(this.X, this.Y);
-        }
-
         #endregion
 
         #region Property changed implementation

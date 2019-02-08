@@ -68,6 +68,9 @@
     <Compile Include="Controllers\ShipBuilder.cs" />
     <Compile Include="Models\ShipConfiguration.cs" />
     <Compile Include="Models\Shot.cs" />
+    <Compile Include="UserControls\ShipControl.xaml.cs">
+      <DependentUpon>ShipControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ShotControl.xaml.cs">
       <DependentUpon>ShotControl.xaml</DependentUpon>
     </Compile>
@@ -77,6 +80,10 @@
     <Compile Include="Views\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\ShipControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ShotControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -96,7 +103,6 @@
     <Compile Include="Controllers\GameHandler.cs" />
     <Compile Include="Database\ApplicationDbContext.cs" />
     <Compile Include="Exceptions\OutOfBoundException.cs" />
-    <Compile Include="Exceptions\OverlapException.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -141,15 +147,20 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Resource Include="Resources\fail_shot.jpg" />
-  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\sea.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\success_shot.jpg" />
+    <Resource Include="Resources\ship_alive.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ship_attacked.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ship_dead.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\missed_shot.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

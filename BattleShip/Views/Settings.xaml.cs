@@ -83,7 +83,7 @@ namespace BattleShip.Views
         #region Functions
         private Game GenGame()
         {
-            Dimension dimension = new Dimension(5, 5);
+            Dimension dimension = new Dimension(10, 10);
 
             // Builders.
             var gb = new GameBuilder();
@@ -103,14 +103,14 @@ namespace BattleShip.Views
             List<Ship> ships = new List<Ship>()
             {
                 sb.FromConfiguration(configurations[0], 1, 1, false),
-                sb.FromConfiguration(configurations[1], 1, 1, true),
-                sb.FromConfiguration(configurations[2], 1, 1, true),
+                sb.FromConfiguration(configurations[1], 3, 2, true),
+                sb.FromConfiguration(configurations[2], 4, 3, true),
             };
 
             // Random placement for IA.
-            List<Ship> robotShips = sb.RandomFromConfigurations(configurations);
+            Map robotMap = sb.RandomFromConfigurations(configurations);
 
-            return gb.CreateGame(configurations, ships, robotShips, dimension);
+            return gb.CreateGame(configurations, ships, robotMap, dimension);
         }
 
         private void ResizeMap(Grid gridName)

@@ -46,21 +46,16 @@ namespace BattleShip.Controllers
         /// </summary>
         /// <param name="configurations"></param>
         /// <param name="humanShips"></param>
-        /// <param name="robotShips"></param>
+        /// <param name="robotMap"></param>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public Game CreateGame(List<ShipConfiguration> configurations, List<Ship> humanShips, List<Ship> robotShips, Dimension dimension)
+        public Game CreateGame(List<ShipConfiguration> configurations, List<Ship> humanShips, Map robotMap, Dimension dimension)
         {
             using (var db = new ApplicationDbContext())
             {
                 // Create human map.
                 Map humanMap = new Map(dimension);
                 humanMap.Ships = humanShips;
-
-                // Create IA map.
-                Map robotMap = new Map(dimension);
-                // TODO: Generate ships based on the configuration.
-                robotMap.Ships = robotShips;
 
                 // Persist the maps.
                 db.DbMap.Add(humanMap);

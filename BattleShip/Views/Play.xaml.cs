@@ -95,11 +95,13 @@ namespace BattleShip.Views
         private void UpdateMap()
         {
             Map map = this.game.Human.Map;
+            List<Shot> robotShots = this.game.Shots.Where(shot => !shot.Player.IsHuman).ToList();
 
             // Button rendering.
             Task.Factory.StartNew(() =>
             {
                 List<Ship> ships = map.Ships;
+                Cell[,] cells = map.MatrixRepresentation;
 
                 for (int i = 0; i < map.Dimension.Height; i++)
                 {
@@ -107,14 +109,41 @@ namespace BattleShip.Views
                     {
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
-                            //  TODO: get boat in map.
+                            Cell cell = cells[i, j];
+                            Shot shot = robotShots.FirstOrDefault(s => s.Cell.X == i && s.Cell.Y == j);
 
-                            Button btn = new Button();
-                            btn.Content = "H:" + i + "W:" + j;
-                            Grid.SetColumn(btn, i);
-                            Grid.SetRow(btn, j);
+                            ShipState state = ShipState.None;
 
-                            this.mapPlayer.Children.Add(btn);
+                            if (cell != null)
+                            {
+                                if (cell.IsDestroyed)
+                                {
+                                    if (cell.Ship.Sunk)
+                                    {
+                                        state = ShipState.Sunk;
+                                    } else
+                                    {
+                                        state = ShipState.Attacked;
+                                    }
+                                } else
+                                {
+                                    state = ShipState.Alive;
+                                }
+                            } else
+                            {
+                                // Handle missed shot.
+                                if (shot != null)
+                                {
+                                    state = ShipState.Missed;
+                                }
+                            }
+
+                            ShipControl shipControl = new ShipControl(i, j, state);
+
+                            Grid.SetColumn(shipControl, i);
+                            Grid.SetRow(shipControl, j);
+
+                            this.mapPlayer.Children.Add(shipControl);
                         }));
                     }
                 }
@@ -135,17 +164,11 @@ namespace BattleShip.Views
         private void UpdateShots()
         {
             Map map = this.game.Computer.Map;
+            List<Shot> playerShots = this.game.Shots.Where(shot => shot.Player.IsHuman).ToList();
 
             // Button rendering.
             Task.Factory.StartNew(() =>
             {
-                List<Shot> playerShots = this.game.Shots.Where(shot => shot.Player.IsHuman).ToList();
-
-                foreach (var s in playerShots)
-                {
-                    System.Console.WriteLine(s.IsSuccessful);
-                }
-
                 for (int i = 0; i < map.Dimension.Height; i++)
                 {
                     for (int j = 0; j < map.Dimension.Width; j++)
@@ -157,9 +180,19 @@ namespace BattleShip.Views
 
                             if (shot != null)
                             {
-                                state = shot.IsSuccessful
-                                    ? ShotState.Success
-                                    : ShotState.Fail;
+                                if (shot.IsSuccessful)
+                                {
+                                    if (shot.Cell.Ship.Sunk)
+                                    {
+                                        state = ShotState.Sunk;
+                                    } else
+                                    {
+                                        state = ShotState.Success;
+                                    }
+                                } else
+                                {
+                                    state = ShotState.Fail;
+                                }
                             }
 
                             ShotControl shotControl = new ShotControl(i, j, state);
@@ -215,23 +248,41 @@ namespace BattleShip.Views
         /// </summary>
         private void TriggerAI()
         {
-            System.Console.WriteLine("AI has been triggered.");
-            // TODO: Implement.
-            // Refresh all.
+            this.gameHandler.AIPlay(this.game);
+
+            this.CheckWinner();
+            this.UpdateMap();
+        }
+
+        private void CheckWinner()
+        {
+            bool computerHasWon = this.game.Human.HasLost;
+
+            if (computerHasWon)
+            {
+                Console.WriteLine("The computer has won.");
+            } else
+            {
+                bool humanHasWon = this.game.Computer.HasLost;
+
+                if (humanHasWon)
+                {
+                    Console.WriteLine("The human has won.");
+                }
+            }
         }
         #endregion
 
         #region Events
         public void HitMap(int x, int y)
         {
-            Cell cell = new Cell(x, y);
             Map foo = this.game.Computer.Map;
 
             // Hits the cell.
-            this.gameHandler.Hit(cell, foo, this.game.Human, this.game);
+            this.gameHandler.Hit(x, y, foo, this.game.Human, this.game);
 
+            this.CheckWinner();
             this.UpdateShots();
-
             this.TriggerAI();
         }
         #endregion

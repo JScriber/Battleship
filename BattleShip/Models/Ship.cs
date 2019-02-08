@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,15 @@ namespace BattleShip.Models
         {
             get { return dimension; }
             set { dimension = value; }
+        }
+
+        [NotMapped]
+        public bool Sunk
+        {
+            get
+            {
+                return this.Cells.All(cell => cell.IsDestroyed);
+            }
         }
 
         #endregion
