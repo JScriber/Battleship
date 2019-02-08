@@ -11,16 +11,6 @@ namespace BattleShip.Models
 {
     public class Shot
     {
-
-        #region StaticVariables
-        #endregion
-
-        #region Constants
-        #endregion
-
-        #region Variables
-        #endregion
-
         #region Attributs
         private Player player;
         private bool isSuccessful;
@@ -73,15 +63,6 @@ namespace BattleShip.Models
             this.cell = cell;
             this.map = map;
         }
-        #endregion
-
-        #region StaticFunctions
-        #endregion
-
-        #region Functions
-        #endregion
-
-        #region Events
         #endregion
     }
 }

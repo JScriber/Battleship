@@ -32,9 +32,6 @@ namespace BattleShip.UserControls
         private readonly String NONE = "sea.jpg";
         #endregion
 
-        #region Variables
-        #endregion
-
         #region Attributs
         private BitmapImage imageSource;
         private ShipState state;
@@ -116,12 +113,6 @@ namespace BattleShip.UserControls
             this.Y = y;
             this.State = state;
         }
-        #endregion
-
-        #region StaticFunctions
-        #endregion
-
-        #region Functions
         #endregion
 
         #region Property changed implementation

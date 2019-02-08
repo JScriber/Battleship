@@ -45,9 +45,9 @@ namespace BattleShip.Views
         {
             get
             {
-                return (this.ComputerHasWon
+                return this.ComputerHasWon
                     ? "The AI has beaten you!"
-                    : "You defeated the AI!");
+                    : "You defeated the AI!";
             }
         }
         #endregion
