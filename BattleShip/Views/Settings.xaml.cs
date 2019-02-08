@@ -138,7 +138,7 @@ namespace BattleShip.Views
         #region Functions
         private Game GenGame()
         {
-            Dimension dimension = new Dimension(10, 10);
+            Dimension dimension = new Dimension(8, 8);
 
             // Builders.
             var gb = new GameBuilder();
@@ -224,18 +224,6 @@ namespace BattleShip.Views
             var lC = ConfigurationList.Last();
 
             ships.Add(sb.FromConfiguration(lC, this.PositionX, this.PositionY, this.Rotation));
-
-            //TODO: Remove it
-            Console.WriteLine("-----ShipsList-----");
-            foreach (var ship in ships)
-            {
-                Console.Write("Type:" + ship.Type + " Cell[");
-                foreach (var cell in ship.Cells)
-                {
-                    Console.Write("x::" + cell.X + " y:" + cell.Y + " ");
-                }
-                Console.WriteLine("]");
-            }
         }
 
         private void StartPlaying()

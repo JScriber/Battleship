@@ -245,14 +245,13 @@ namespace BattleShip.Views
             this.UpdateMap();
         }
 
-        private void CheckWinner()
+        private bool CheckWinner()
         {
-            bool computerHasWon = this.game.Human.HasLost;
-
             if (this.game.Human.HasLost || this.game.Computer.HasLost)
             {
-                (this.Parent as Window).Content = new End(this.game.Human.HasLost);
+                return true;
             }
+            return false;
         }
         #endregion
 
@@ -264,9 +263,15 @@ namespace BattleShip.Views
             // Hits the cell.
             this.gameHandler.Hit(x, y, foo, this.game.Human, this.game);
 
-            this.CheckWinner();
-            this.UpdateShots();
-            this.TriggerAI();
+            if (!this.CheckWinner())
+            {
+                this.UpdateShots();
+                this.TriggerAI();
+            }
+            else
+            {
+                (this.Parent as Window).Content = new End(this.game.Human.HasLost);
+            }
         }
         #endregion
     }

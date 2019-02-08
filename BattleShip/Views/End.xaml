@@ -14,8 +14,11 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBox Text="{Binding Winner}"></TextBox>
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Winner}"></TextBlock>
+        <Button Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Click="BtnStartGame">Restart</Button>
+        
     </Grid>
 </Page>
