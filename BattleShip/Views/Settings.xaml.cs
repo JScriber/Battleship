@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,9 +24,6 @@ using System.Windows.Threading;
 
 namespace BattleShip.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour Settings.xaml
-    /// </summary>
     public partial class Settings : Page, INotifyPropertyChanged
     {
         #region Variables
@@ -38,13 +36,17 @@ namespace BattleShip.Views
         #endregion
 
         #region Constants
-        // Limits.
         private const int MIN_MAP_SIZE = 1;
         private const int MAX_MAP_SIZE = 35;
 
-        // Default sizes.
         private const int DEFAULT_MAP_WIDTH = 5;
         private const int DEFAULT_MAP_HEIGHT = 5;
+        private const int DEFAULT_POSITION_X = 1;
+        private const int DEFAULT_POSITION_Y = 1;
+        private const ShipType DEFAULT_TYPE = ShipType.Carrier;
+        private const int DEFAULT_WIDTH = 1;
+        private const int DEFAULT_HEIGHT = 1;
+        private const bool DEFAULT_ROTATED = false;
         #endregion
 
         #region Attributs
@@ -53,31 +55,87 @@ namespace BattleShip.Views
         private int shipWidth;
         private int shipHeight;
         private bool rotation;
-        private String selectedConfiguration;
+        private ShipType shipType;
 
         private GameBuilder gameBuilder;
         private ShipBuilder shipBuilder;
 
         private List<ShipConfiguration> configurations;
-        private List<Ship> userShips;
+        private ObservableCollection<Ship> userShips = new ObservableCollection<Ship>();
         #endregion
 
         #region Properties
         public int MapWidth
         {
-            get { return shipView.MapWidth; }
+            get { return shipView.Map.Dimension.Width; }
             set
             {
-                this.shipView.MapWidth = value;
+                if (value >= MIN_MAP_SIZE && value <= MAX_MAP_SIZE)
+                {
+                    this.shipView.Map.Dimension.Width = value;
+                    this.RebuildMap();
+                }
             }
         }
 
         public int MapHeight
         {
-            get { return shipView.MapHeight; }
+            get { return shipView.Map.Dimension.Height; }
             set
             {
-                this.shipView.MapHeight = value;
+                if (value >= MIN_MAP_SIZE && value <= MAX_MAP_SIZE)
+                {
+                    this.shipView.Map.Dimension.Height = value;
+                    this.RebuildMap();
+                }
+            }
+        }
+        
+        public int PositionX
+        {
+            get { return positionX; }
+            set
+            {
+                if (value > 0 && value <= this.MapWidth - this.ShipWidth)
+                {
+                    positionX = value;
+                }
+            }
+        }
+        
+        public int PositionY
+        {
+            get { return positionY; }
+            set
+            {
+                if (value > 0 && value <= this.MapHeight - this.ShipHeight)
+                {
+                    positionY = value;
+                }
+            }
+        }
+
+        public int ShipWidth
+        {
+            get { return shipWidth; }
+            set
+            {
+                if (value > 0 && this.PositionX + value <= this.MapWidth)
+                {
+                    shipWidth = value;
+                }
+            }
+        }
+
+        public int ShipHeight
+        {
+            get { return shipHeight; }
+            set
+            {
+                if (value > 0 && this.PositionY + value <= this.MapHeight)
+                {
+                    shipHeight = value;
+                }
             }
         }
 
@@ -87,42 +145,18 @@ namespace BattleShip.Views
             set { rotation = value; }
         }
 
-        public int PositionX
-        {
-            get { return positionX; }
-            set { positionX = value; }
-        }
-        
-        public int PositionY
-        {
-            get { return positionY; }
-            set { positionY = value; }
-        }
-
-        public int ShipWidth
-        {
-            get { return shipWidth; }
-            set { shipWidth = value; }
-        }
-
-        public int ShipHeight
-        {
-            get { return shipHeight; }
-            set { shipHeight = value; }
-        }
-
-        public List<Ship> UserShips
+        public ObservableCollection<Ship> UserShips
         {
             get { return userShips; }
             set { userShips = value; }
         }
 
-        public String SelectedConfiguration
+        public ShipType ShipType
         {
-            get { return selectedConfiguration; }
-            set { selectedConfiguration = value; }
+            get { return shipType; }
+            set { shipType = value; }
         }
-        
+
         public GameBuilder GameBuilder
         {
             get { return gameBuilder; }
@@ -137,30 +171,24 @@ namespace BattleShip.Views
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
         public Settings()
         {
             InitializeComponent();
-
-            BindListviews();
             this.DataContext = this;
 
+            // Builders.
             this.GameBuilder = new GameBuilder();
-            this.ShipBuilder = new ShipBuilder(new Dimension(MapWidth, MapHeight));
+
+            Dimension dimension = new Dimension(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
+            this.ShipBuilder = new ShipBuilder(dimension);
+            this.shipView.Map = new Map(dimension);
+            this.shipView.Build();
 
             // Default configurations modified by the user.
-            this.configurations = new List<ShipConfiguration>()
-            {
-                new ShipConfiguration(Models.ShipType.Destroyer, new Dimension(2, 1), 1),
-                new ShipConfiguration(Models.ShipType.Cruiser, new Dimension(3, 1), 1),
-                new ShipConfiguration(Models.ShipType.Submarine, new Dimension(3, 1), 1),
-                new ShipConfiguration(Models.ShipType.BattleShip, new Dimension(4, 1), 1),
-                new ShipConfiguration(Models.ShipType.Carrier, new Dimension(5, 1), 1),
-            };
+            this.configurations = new List<ShipConfiguration>();
 
-            this.SetTypeComboxBox();
+            this.formShipType.ItemsSource = Enum.GetValues(typeof(Models.ShipType)).Cast<Models.ShipType>();
+            this.ResetForm();
         }
         #endregion
 
@@ -170,73 +198,14 @@ namespace BattleShip.Views
         #region Functions
         private Game GenGame()
         {
-            Dimension dimension = new Dimension(8, 8);
-
-            // Builders.
-            var gb = new GameBuilder();
-            var sb = new ShipBuilder(dimension);
-
-            // TODO: View modifies the configurations.
-            this.UserShips = new List<Ship>()
-            {
-                sb.FromConfiguration(configurations[0], 1, 1, false),
-                sb.FromConfiguration(configurations[1], 3, 2, true),
-                sb.FromConfiguration(configurations[2], 4, 3, true),
-            };
+            // Selected ships.
+            List<Ship> ships = this.userShips.ToList();
+            Dimension dimension = this.shipView.Map.Dimension;
 
             // Random placement for IA.
-            Map robotMap = sb.RandomFromConfigurations(configurations);
+            Map robotMap = this.ShipBuilder.RandomFromConfigurations(configurations);
 
-            return gb.CreateGame(configurations, this.UserShips, robotMap, dimension);
-        }
-
-        private void ResizeMap()
-        {
-            
-        }
-
-        private void BindListviews()
-        {
-            //this.shipListAdded.ItemsSource = ships;
-        }
-
-        private void AddShip(ShipType type, int width, int height)
-        {
-            Dimension dimension = new Dimension(width, height);
-            ShipConfiguration configuration = new ShipConfiguration(type, dimension, 1);
-        }
-
-        /// <summary>
-        /// Set the availables configurations in the combobox.
-        /// </summary>
-        private void SetTypeComboxBox()
-        {
-            this.formShipType.Items.Clear();
-
-            foreach (var configuration in this.configurations)
-            {
-                ComboBoxItem item = new ComboBoxItem();
-                Dimension dimension = configuration.Dimension;
-                String name = configuration.Type + "  W" + dimension.Width + " - H" + dimension.Height;
-
-                item.Content = name;
-                item.Name = configuration.Type.ToString();
-
-                this.formShipType.Items.Add(item);
-            }
-        }
-
-        /// <summary>
-        /// Changes the selected configuration in the view.
-        /// </summary>
-        /// <param name="configuration"></param>
-        private void SetSelectedConfiguration(ShipConfiguration configuration)
-        {
-            this.ShipHeight = configuration.Dimension.Height;
-            this.ShipWidth = configuration.Dimension.Width;
-
-            OnPropertyChanged("ShipHeight");
-            OnPropertyChanged("ShipWidth");
+            return this.GameBuilder.CreateGame(configurations, ships, robotMap, dimension);
         }
 
         /// <summary>
@@ -244,8 +213,41 @@ namespace BattleShip.Views
         /// </summary>
         private void StartPlaying()
         {
-            Game game = this.GenGame();
-            (this.Parent as Window).Content = new Play(game);
+            if (this.userShips.Count() > 0)
+            {
+                Game game = this.GenGame();
+                (this.Parent as Window).Content = new Play(game);
+            } else
+            {
+                String message = "You must have at least one ship.";
+                MessageBox.Show(message, "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        /// <summary>
+        /// Sets the form with the initial values.
+        /// </summary>
+        private void ResetForm()
+        {
+            this.PositionX = DEFAULT_POSITION_X;
+            this.PositionY = DEFAULT_POSITION_Y;
+            this.formShipType.SelectedItem = DEFAULT_TYPE;
+            this.ShipWidth = DEFAULT_WIDTH;
+            this.ShipHeight = DEFAULT_HEIGHT;
+            this.Rotation = DEFAULT_ROTATED;
+
+            this.OnPropertyChanged("PositionX");
+            this.OnPropertyChanged("PositionY");
+            this.OnPropertyChanged("ShipWidth");
+            this.OnPropertyChanged("ShipHeight");
+            this.OnPropertyChanged("Rotation");
+        }
+
+        private void RebuildMap()
+        {
+            this.userShips.Clear();
+            this.shipView.Map.Ships.Clear();
+            this.shipView.Build();
         }
         #endregion
 
@@ -257,26 +259,54 @@ namespace BattleShip.Views
 
         private void FormShipType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int value = this.formShipType.SelectedIndex;
-            ShipConfiguration configuration = this.configurations[value];
-
-            this.SetSelectedConfiguration(configuration);
-        }
-
-        private void ShipListAdded_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
+            this.ShipType = (ShipType)this.formShipType.SelectedItem;
         }
 
         private void Add_Ship(object sender, RoutedEventArgs e)
         {
-            System.Console.WriteLine("Add a ship");
-            System.Console.WriteLine("X: " + this.PositionX);
-            System.Console.WriteLine("Y: " + this.PositionY);
-            System.Console.WriteLine("Width: " + this.ShipWidth);
-            System.Console.WriteLine("Height: " + this.ShipHeight);
-            System.Console.WriteLine("Rotated: " + this.Rotation);
+            int x = this.PositionX - 1;
+            int y = this.PositionY - 1;
+            int width = this.ShipWidth;
+            int height = this.ShipHeight;
+            bool rotated = this.Rotation;
+            ShipType type = this.ShipType;
 
+            Dimension dimension = new Dimension(width, height);
+            ShipConfiguration configuration = new ShipConfiguration(type, dimension, 1);
+
+            this.configurations.Add(configuration);
+
+            Ship ship = this.ShipBuilder.FromConfiguration(configuration, x, y, rotated);
+
+            if (ship == null)
+            {
+                String message = "Invalid ship";
+                MessageBox.Show(message, "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            } else
+            {
+                this.UserShips.Add(ship);
+                this.shipView.Map.Ships = this.UserShips.ToList();
+                this.shipView.Update();
+
+                this.ResetForm();
+            }
+        }
+
+        private void Select_Ship(object sender, SelectionChangedEventArgs e)
+        {
+            int index = this.shipListView.SelectedIndex;
+
+            if (index > 0 && index < this.UserShips.Count())
+            {
+                Ship ship = this.UserShips[index];
+                // TODO: Highlight ship.
+            }
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
         #endregion
 
@@ -292,6 +322,5 @@ namespace BattleShip.Views
             }
         }
         #endregion
-
     }
 }

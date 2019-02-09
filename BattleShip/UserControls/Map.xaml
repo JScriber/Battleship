@@ -5,5 +5,5 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattleShip.UserControls"
              mc:Ignorable="d">
-    <Grid x:Name="map" Margin="10" VerticalAlignment="Stretch"></Grid>
+    <Grid x:Name="mapView" Margin="10" VerticalAlignment="Stretch"></Grid>
 </UserControl>

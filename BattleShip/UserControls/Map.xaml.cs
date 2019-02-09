@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BattleShip.Models;
+using BattleShip.Models.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -21,66 +23,32 @@ namespace BattleShip.UserControls
     public partial class MapControl : UserControl, INotifyPropertyChanged
     {
         #region StaticVariables
-        // Limits.
-        public static readonly int MIN_MAP_SIZE = 1;
-        public static readonly int MAX_MAP_SIZE = 35;
-        // Default sizes.
-        public static readonly int DEFAULT_MAP_WIDTH = 5;
-        public static readonly int DEFAULT_MAP_HEIGHT = 5;
         #endregion
 
         #region Attributs
-        private int mapHeight;
-        private int mapWidth;
+        private Map map;
         #endregion
 
         #region Properties
-        public int MapHeight
-        {
-            get { return mapHeight; }
-            set {
-                if (this.ValidSize(value))
-                {
-                    mapHeight = value;
-                } else
-                {
-                    mapHeight = DEFAULT_MAP_HEIGHT;
-                }
 
-                this.Render();
-            }
+
+        public Map Map
+        {
+            get { return map; }
+            set { map = value; }
         }
 
-        public int MapWidth
-        {
-            get { return mapWidth; }
-            set {
-                if (this.ValidSize(value))
-                {
-                    mapWidth = value;
-                } else
-                {
-                    mapWidth = DEFAULT_MAP_WIDTH;
-                }
-
-                this.Render();
-            }
-        }
         #endregion
 
         #region Constructors
         public MapControl()
         {
             InitializeComponent();
-
-            this.SetSize(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
         }
 
-        public MapControl(int width, int height)
+        public MapControl(Map map): this()
         {
-            InitializeComponent();
-
-            this.SetSize(width, height);
+            this.map = map;
         }
         #endregion
 
@@ -88,32 +56,14 @@ namespace BattleShip.UserControls
         #endregion
 
         #region Functions
-        /// <summary>
-        /// Initializes the map.
-        /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        private void SetSize(int width, int height)
+        public void Build()
         {
-            // Doesn't use setters to avoid two rendering.
-            this.mapWidth = width;
-            this.mapHeight = height;
+            int width = this.Map.Dimension.Width;
+            int height = this.Map.Dimension.Height;
 
-            this.Render();
-        }
-
-        private bool ValidSize(int size)
-        {
-            return size >= MIN_MAP_SIZE && size < MAX_MAP_SIZE;
-        }
-
-        public void Render()
-        {
-            Console.WriteLine(this.MapHeight + " : " + this.MapWidth);
-
-            this.map.Children.Clear();
-            this.map.ColumnDefinitions.Clear();
-            this.map.RowDefinitions.Clear();
+            this.mapView.Children.Clear();
+            this.mapView.ColumnDefinitions.Clear();
+            this.mapView.RowDefinitions.Clear();
 
             // Helper size.
             GridLength helperSize = new GridLength(18);
@@ -121,30 +71,32 @@ namespace BattleShip.UserControls
             // Column helper.
             ColumnDefinition colHelper = new ColumnDefinition();
             colHelper.Width = helperSize;
-            this.map.ColumnDefinitions.Add(colHelper);
+            this.mapView.ColumnDefinitions.Add(colHelper);
 
-            for (int i = 0; i < this.MapWidth; i++)
+            for (int i = 0; i < width; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
-                this.map.ColumnDefinitions.Add(col);
+                this.mapView.ColumnDefinitions.Add(col);
             }
 
             // Row helper.
             RowDefinition rowHelper = new RowDefinition();
             rowHelper.Height = helperSize;
-            this.map.RowDefinitions.Add(rowHelper);
+            this.mapView.RowDefinitions.Add(rowHelper);
 
-            for (int i = 0; i < this.MapHeight; i++)
+            for (int i = 0; i < height; i++)
             {
                 RowDefinition row = new RowDefinition();
-                this.map.RowDefinitions.Add(row);
+                this.mapView.RowDefinitions.Add(row);
             }
 
             Task.Factory.StartNew(() =>
             {
-                for (int i = 0; i < this.MapWidth + 1; i++)
+                Cell[,] cells = this.Map.MatrixRepresentation;
+
+                for (int i = 0; i < width + 1; i++)
                 {
-                    for (int j = 0; j < this.MapHeight + 1; j++)
+                    for (int j = 0; j < height + 1; j++)
                     {
                         Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
                         {
@@ -168,20 +120,79 @@ namespace BattleShip.UserControls
 
                                 Grid.SetColumn(text, i);
                                 Grid.SetRow(text, j);
-                                this.map.Children.Add(text);
+                                this.mapView.Children.Add(text);
                             }
                             else
                             {
-                                ShipControl control = new ShipControl(i - 1, j - 1, ShipState.None);
+                                int x = i - 1;
+                                int y = j - 1;
+
+                                ShipControl control = new ShipControl(x, y, ShipState.None);
+                                this.SetShipControlState(control, cells[x, y]);
 
                                 Grid.SetColumn(control, i);
                                 Grid.SetRow(control, j);
-                                this.map.Children.Add(control);
+                                this.mapView.Children.Add(control);
                             }
                         }));
                     }
                 }
             });
+        }
+
+        /// <summary>
+        /// Updates the view.
+        /// </summary>
+        public void Update()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Cell[,] cells = this.Map.MatrixRepresentation;
+
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, new ThreadStart(delegate
+                {
+                    UIElementCollection mapElements = this.mapView.Children;
+
+                    foreach (UIElement mapElement in mapElements)
+                    {
+                        if (mapElement is ShipControl)
+                        {
+                            ShipControl shipControl = mapElement as ShipControl;
+
+                            int x = shipControl.X;
+                            int y = shipControl.Y;
+
+                            this.SetShipControlState(shipControl, cells[x, y]);
+                        }
+                    }
+                }));
+            });
+        }
+
+        private void SetShipControlState(ShipControl shipControl, Cell cell)
+        {
+            ShipState state = ShipState.None;
+
+            if (cell != null)
+            {
+                if (cell.IsDestroyed)
+                {
+                    if (cell.Ship.Sunk)
+                    {
+                        state = ShipState.Sunk;
+                    }
+                    else
+                    {
+                        state = ShipState.Attacked;
+                    }
+                }
+                else
+                {
+                    state = ShipState.Alive;
+                }
+            }
+
+            shipControl.State = state;
         }
         #endregion
 
