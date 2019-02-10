@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using BattleShip.Models;
 using BattleShip.Models.Utils;
-using BattleShip.Exceptions;
 
 namespace BattleShip.Controllers
 {

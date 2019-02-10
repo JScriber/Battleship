@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BattleShip.Models;
 using BattleShip.Models.Utils;
-using BattleShip.Exceptions;
 using BattleShip.Database;
 
 namespace BattleShip.Controllers
@@ -115,7 +114,7 @@ namespace BattleShip.Controllers
         {
             Ship ship = target.Ship;
 
-            if (!this.HasSunk(ship))
+            if (!ship.Sunk)
             {
                 int x = target.X;
                 int y = target.Y;
@@ -126,29 +125,6 @@ namespace BattleShip.Controllers
                 {
                     cell.IsDestroyed = true;
                 }
-            }
-        }
-
-        private bool HasSunk(Ship ship)
-        {
-            return ship.Cells.All(cell => cell.IsDestroyed);
-        }
-
-        /// <summary>
-        /// Finds the ship in the map.
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="cell"></param>
-        /// <returns></returns>
-        private Ship FindShip(Map map, Cell cell)
-        {
-            if (this.CellInMap(cell, map))
-            {
-                return map.Ships.FirstOrDefault(ship => ship.Cells.Any(c => this.CellsAreEqual(c, cell)));
-            }
-            else
-            {
-                throw new OutOfBoundException();
             }
         }
 
