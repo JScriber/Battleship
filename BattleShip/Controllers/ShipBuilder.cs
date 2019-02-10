@@ -153,8 +153,8 @@ namespace BattleShip.Controllers
         private bool FitBounds(int x, int y, Dimension dimension)
         {
             return x >= 0 && y >= 0
-                && x + dimension.Width < this.Bounds.Width
-                && y + dimension.Height < this.Bounds.Height;
+                && x + dimension.Width <= this.Bounds.Width
+                && y + dimension.Height <= this.Bounds.Height;
         }
 
         /// <summary>

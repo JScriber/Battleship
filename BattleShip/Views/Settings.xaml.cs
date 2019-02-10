@@ -120,7 +120,7 @@ namespace BattleShip.Views
             get { return shipWidth; }
             set
             {
-                if (value > 0 && this.PositionX + value <= this.MapWidth)
+                if (value > 0 && this.PositionX - 1 + value <= this.MapWidth)
                 {
                     shipWidth = value;
                 }
@@ -132,7 +132,7 @@ namespace BattleShip.Views
             get { return shipHeight; }
             set
             {
-                if (value > 0 && this.PositionY + value <= this.MapHeight)
+                if (value > 0 && this.PositionY - 1 + value <= this.MapHeight)
                 {
                     shipHeight = value;
                 }
