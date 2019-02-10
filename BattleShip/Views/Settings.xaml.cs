@@ -203,9 +203,53 @@ namespace BattleShip.Views
             Dimension dimension = this.shipView.Map.Dimension;
 
             // Random placement for IA.
-            Map robotMap = this.ShipBuilder.RandomFromConfigurations(configurations);
+            Map robotMap = this.ShipBuilder.RandomFromConfigurations(this.configurations);
 
-            return this.GameBuilder.CreateGame(configurations, ships, robotMap, dimension);
+            return this.GameBuilder.CreateGame(this.AggregatedConfigurations(), ships, robotMap, dimension);
+        }
+
+        /// <summary>
+        /// Aggregates the configurations with the multiplicity as index.
+        /// </summary>
+        /// <returns></returns>
+        private List<ShipConfiguration> AggregatedConfigurations()
+        {
+            List<ShipConfiguration> aggregated = new List<ShipConfiguration>();
+
+            foreach (var configuration in this.configurations)
+            {
+                // Configuration attributes.
+                int width = configuration.Dimension.Width;
+                int height = configuration.Dimension.Height;
+                ShipType type = configuration.Type;
+
+                // Look if the configuration has already been registered.
+                ShipConfiguration registered = aggregated.FirstOrDefault(c => this.ConfigurationsMatch(c, configuration));
+
+                if (registered == null)
+                {
+                    // Recycle the old object.
+                    aggregated.Add(configuration);
+                } else
+                {
+                    registered.Multiplicity += 1;
+                }
+            }
+
+            return aggregated;
+        }
+
+        /// <summary>
+        /// Says if both configurations are identical.
+        /// </summary>
+        /// <param name="conf1"></param>
+        /// <param name="conf2"></param>
+        /// <returns></returns>
+        private bool ConfigurationsMatch(ShipConfiguration conf1, ShipConfiguration conf2)
+        {
+            return conf1.Type == conf2.Type && 
+                conf1.Dimension.Width == conf2.Dimension.Width &&
+                conf1.Dimension.Height == conf2.Dimension.Height;
         }
 
         /// <summary>
@@ -273,17 +317,16 @@ namespace BattleShip.Views
 
             Dimension dimension = new Dimension(width, height);
             ShipConfiguration configuration = new ShipConfiguration(type, dimension, 1);
-
-            this.configurations.Add(configuration);
-
             Ship ship = this.ShipBuilder.FromConfiguration(configuration, x, y, rotated);
 
-            if (ship == null)
+            if (ship == null || this.ShipBuilder.ShipIntersects(ship, this.shipView.Map))
             {
                 String message = "Invalid ship";
                 MessageBox.Show(message, "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             } else
             {
+                this.configurations.Add(configuration);
+
                 this.UserShips.Add(ship);
                 this.shipView.Map.Ships = this.UserShips.ToList();
                 this.shipView.Update();

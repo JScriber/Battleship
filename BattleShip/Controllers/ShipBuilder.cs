@@ -186,7 +186,7 @@ namespace BattleShip.Controllers
         /// <param name="ship"></param>
         /// <param name="map"></param>
         /// <returns></returns>
-        private bool ShipIntersects(Ship ship, Map map)
+        public bool ShipIntersects(Ship ship, Map map)
         {
             Cell[,] representation = map.MatrixRepresentation;
 
