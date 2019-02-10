@@ -19,17 +19,54 @@ namespace BattleShip.UserControls
 {
     public enum ShipState { None, Alive, Attacked, Sunk, Missed }
 
+    public sealed class Coordinates
+    {
+        #region Attributs
+        private int x;
+        private int y;
+        #endregion
+
+        #region Properties
+        public int X
+        {
+            get { return x; }
+            set { x = value; }
+        }
+
+        public int Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
+        #endregion
+
+        #region Constructors
+        public Coordinates()
+        {
+
+        }
+
+        public Coordinates(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        #endregion
+    }
+
     /// <summary>
     /// Logique d'interaction pour ShipControl.xaml
     /// </summary>
     public partial class ShipControl : UserControl, INotifyPropertyChanged
     {
         #region Constants
-        private readonly String ALIVE = "ship_alive.jpg";
-        private readonly String ATTACKED = "ship_attacked.jpg";
-        private readonly String SUNK = "ship_dead.jpg";
-        private readonly String MISSED = "missed_shot.jpg";
-        private readonly String NONE = "sea.jpg";
+        private const String RESOURCES = "pack://application:,,,/BattleShip;component/Resources/";
+
+        private const String ALIVE = "ship_alive.jpg";
+        private const String ATTACKED = "ship_attacked.jpg";
+        private const String SUNK = "ship_dead.jpg";
+        private const String MISSED = "missed_shot.jpg";
+        private const String NONE = "sea.jpg";
         #endregion
 
         #region Attributs
@@ -37,6 +74,8 @@ namespace BattleShip.UserControls
         private ShipState state;
         private int x;
         private int y;
+
+        public event EventHandler<Coordinates> Fire;
         #endregion
 
         #region Properties
@@ -70,24 +109,24 @@ namespace BattleShip.UserControls
                 state = value;
 
                 // Base link.
-                String link = "pack://application:,,,/BattleShip;component/Resources/";
+                String link = RESOURCES;
 
                 switch (state)
                 {
                     case ShipState.Alive:
-                        link += this.ALIVE;
+                        link += ALIVE;
                         break;
                     case ShipState.Attacked:
-                        link += this.ATTACKED;
+                        link += ATTACKED;
                         break;
                     case ShipState.Sunk:
-                        link += this.SUNK;
+                        link += SUNK;
                         break;
                     case ShipState.Missed:
-                        link += this.MISSED;
+                        link += MISSED;
                         break;
                     default:
-                        link += this.NONE;
+                        link += NONE;
                         break;
                 }
 
@@ -115,6 +154,16 @@ namespace BattleShip.UserControls
         }
         #endregion
 
+        #region Events
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Fire != null)
+            {
+                this.Fire(this, new Coordinates(this.X, this.Y));
+            }
+        }
+        #endregion
+
         #region Property changed implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -126,6 +175,6 @@ namespace BattleShip.UserControls
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
-        #endregion
+        #endregion 
     }
 }

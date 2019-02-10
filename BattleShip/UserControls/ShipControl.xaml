@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BattleShip.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Button BorderThickness="0" Margin="0">
+    <Button BorderThickness="0" Margin="0" Click="Button_Click">
         <Image x:Name="image" Stretch="Fill" Source="{Binding ImageSource}"></Image>
     </Button>
 </UserControl>

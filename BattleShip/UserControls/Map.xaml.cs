@@ -27,23 +27,46 @@ namespace BattleShip.UserControls
 
         #region Attributs
         private Map map;
+        private List<Shot> shots;
+        private bool triggerFire;
+        private bool showShips;
+
+        public event EventHandler<Coordinates> Fire;
         #endregion
 
         #region Properties
-
-
         public Map Map
         {
             get { return map; }
             set { map = value; }
         }
 
+        public List<Shot> Shots
+        {
+            get { return shots; }
+            set { shots = value; }
+        }
+        
+        public bool TriggerFire
+        {
+            get { return triggerFire; }
+            set { triggerFire = value; }
+        }
+        
+        public bool ShowShips
+        {
+            get { return showShips; }
+            set { showShips = value; }
+        }
         #endregion
 
         #region Constructors
         public MapControl()
         {
             InitializeComponent();
+            this.Shots = new List<Shot>();
+            this.TriggerFire = false;
+            this.ShowShips = true;
         }
 
         public MapControl(Map map): this()
@@ -128,7 +151,7 @@ namespace BattleShip.UserControls
                                 int y = j - 1;
 
                                 ShipControl control = new ShipControl(x, y, ShipState.None);
-                                this.SetShipControlState(control, cells[x, y]);
+                                this.SetShipControlState(control, cells[x, y], x, y);
 
                                 Grid.SetColumn(control, i);
                                 Grid.SetRow(control, j);
@@ -162,16 +185,23 @@ namespace BattleShip.UserControls
                             int x = shipControl.X;
                             int y = shipControl.Y;
 
-                            this.SetShipControlState(shipControl, cells[x, y]);
+                            this.SetShipControlState(shipControl, cells[x, y], x, y);
                         }
                     }
                 }));
             });
         }
 
-        private void SetShipControlState(ShipControl shipControl, Cell cell)
+        /// <summary>
+        /// Sets the ship control state based on the cell state.
+        /// </summary>
+        /// <param name="shipControl"></param>
+        /// <param name="cell"></param>
+        private void SetShipControlState(ShipControl shipControl, Cell cell, int x, int y)
         {
             ShipState state = ShipState.None;
+
+            this.CheckRemoveTrigger(shipControl);
 
             if (cell != null)
             {
@@ -188,15 +218,62 @@ namespace BattleShip.UserControls
                 }
                 else
                 {
-                    state = ShipState.Alive;
+                    if (this.ShowShips)
+                    {
+                        state = ShipState.Alive;
+                    }
+                }
+            } else
+            {
+                if (this.Shots.Any(s => s.Cell.X == x && s.Cell.Y == y))
+                {
+                    state = ShipState.Missed;
                 }
             }
 
+            this.CheckApplyTrigger(shipControl);
+
             shipControl.State = state;
+        }
+
+        /// <summary>
+        /// Checks and apply trigger.
+        /// </summary>
+        /// <param name="control"></param>
+        private void CheckApplyTrigger(ShipControl control)
+        {
+            if (this.TriggerFire)
+            {
+                ShipState state = control.State;
+
+                if (state == ShipState.Alive || state == ShipState.None)
+                {
+                    control.Fire += ShipControl_Fire;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks and remove the trigger.
+        /// </summary>
+        /// <param name="control"></param>
+        private void CheckRemoveTrigger(ShipControl control)
+        {
+            if (this.TriggerFire)
+            {
+                control.Fire -= ShipControl_Fire;
+            }
         }
         #endregion
 
         #region Events
+        private void ShipControl_Fire(object sender, Coordinates e)
+        {
+            if (this.Fire != null)
+            {
+                this.Fire(this, e);
+            }
+        }
         #endregion
 
         #region Property changed implementation

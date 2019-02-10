@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BattleShip.Views"
+      xmlns:control="clr-namespace:BattleShip.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Game">
@@ -37,15 +38,15 @@
             </Grid.RowDefinitions>
         </Grid>
 
-        <TextBlock Grid.Row="1" Grid.Column="1" Background="IndianRed"/>
-        <TextBlock Grid.Row="1" Grid.Column="3" Background="LightBlue"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Background="IndianRed"/>
-        <TextBlock Grid.Row="3" Grid.Column="3" Background="LightBlue"/>
-        
-        <Grid x:Name="mapShots" Grid.Row="2" Grid.Column="1"></Grid>
-        <Grid x:Name="mapPlayer" Grid.Row="2" Grid.Column="3"></Grid>
+        <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontSize="15" Foreground="IndianRed" FontWeight="Bold" HorizontalAlignment="Center">Foo's ships</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" FontSize="15" Foreground="Blue" FontWeight="Bold" HorizontalAlignment="Center">Yours</TextBlock>
 
-        <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">Ennemy</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">You</TextBlock>
+        <control:MapControl x:Name="mapAI" Grid.Row="2" Grid.Column="1"
+                            TriggerFire="True" ShowShips="False"
+                            VerticalAlignment="Stretch" Fire="MapAI_Fire"/>
+
+        <control:MapControl x:Name="mapPlayer" Grid.Row="2" Grid.Column="3"
+                            TriggerFire="False" ShowShips="True"
+                            VerticalAlignment="Stretch"/>
     </Grid>
 </Page>
